@@ -1,9 +1,5 @@
 # Case Study — Sheet Folders
 
-**Stack** : Google Apps Script · HTML · CSS · JavaScript  
-
----
-
 ## Le problème
 
 Sur les projets Google Sheets avec beaucoup de données, on se retrouve facilement avec de multiples onglets. 
