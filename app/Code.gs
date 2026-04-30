@@ -6,14 +6,14 @@ const STORAGE_KEY = 'sheetFolders';
 
 function onOpen() {
   SpreadsheetApp.getUi()
-    .createMenu('📁 Dossiers')
-    .addItem('Ouvrir le panneau', 'openSidebar')
+    .createMenu('📁 Sheet Folders')
+    .addItem('Gérer les dossiers', 'openSidebar')
     .addToUi();
 }
 
 function openSidebar() {
   const html = HtmlService.createHtmlOutputFromFile('Sidebar')
-    .setTitle('📁 Dossiers')
+    .setTitle('📁 Sheet Folders')
     .setWidth(280);
   SpreadsheetApp.getUi().showSidebar(html);
 }
