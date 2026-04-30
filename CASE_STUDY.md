@@ -1,17 +1,15 @@
 # Case Study — Sheet Folders
 
-**Rôle** : Conception + développement (solo)  
 **Stack** : Google Apps Script · HTML · CSS · JavaScript  
-**Durée** : Projet personnel, itéré en plusieurs sessions  
-**Statut** : Fonctionnel, utilisé en production
 
 ---
 
 ## Le problème
 
-Sur les projets avec beaucoup de données, les fichiers Google Sheets grossissent vite. 30, 40, parfois 60 onglets dans un seul fichier. Google Sheets ne propose aucun moyen de les organiser : pas de dossiers, pas de groupes, juste une rangée d'onglets à faire défiler horizontalement.
+Sur les projets Google Sheets avec beaucoup de données, on se retrouve facilement avec de multiples onglets. 
+Mais Google Sheets ne propose aucun moyen de les organiser : pas de dossiers, pas de groupes, juste une rangée d'onglets à faire défiler horizontalement.
 
-Le workflow habituel pour s'en sortir : renommer les onglets avec des préfixes (`[BUDGET] Mars`, `[BUDGET] Avril`), ou cacher manuellement les feuilles non utilisées. Les deux solutions sont lentes et oubliables.
+Le workflow habituel pour s'en sortir : renommer les onglets avec des préfixes (`[BUDGET] Mars`, `[BUDGET] Avril`), ou cacher manuellement les feuilles non utilisées. Les deux solutions sont lentes et fastidieuses.
 
 **Question de départ** : est-ce qu'on peut ajouter un système de dossiers directement dans Google Sheets, sans quitter l'interface ?
 
