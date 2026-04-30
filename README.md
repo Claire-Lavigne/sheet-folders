@@ -4,7 +4,7 @@
 
 Google Sheets ne propose pas de système de dossiers pour les onglets. Sur des fichiers complexes avec 20+ feuilles, retrouver ce qu'on cherche devient vite un problème. **Sheet Folders** résout ça avec une sidebar légère directement intégrée dans Sheets.
 
-![Sheet Folders preview](preview.png)
+![Sheet Folders preview](preview.jpg)
 
 ---
 
@@ -27,9 +27,9 @@ Dans ton Google Sheet : **Extensions → Apps Script**
 
 ### 2. Crée les fichiers
 
-**Fichier `Code.gs`** (remplace le contenu existant) → colle le contenu de [`Code.gs`](Code.gs)
+**Fichier `Code.gs`** (remplace le contenu existant) → colle le contenu de [`Code.gs`](/app/Code.gs)
 
-**Fichier `Sidebar.html`** (nouveau fichier HTML) → colle le contenu de [`Sidebar.html`](Sidebar.html)
+**Fichier `Sidebar.html`** (nouveau fichier HTML) → colle le contenu de [`Sidebar.html`](/app/Sidebar.html)
 
 > Dans l'éditeur : clique sur **+** à côté de "Fichiers" → choisis **HTML** → nomme-le exactement `Sidebar`
 
@@ -71,5 +71,4 @@ Le menu **📁 Dossiers** apparaît dans la barre de menu.
 
 ## Auteur
 
-Claire — développeuse front-end  
-[Portfolio](#) · [GitHub](#)
+Claire — développeuse front-end
