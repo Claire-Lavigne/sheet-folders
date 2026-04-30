@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:       #0F1117;
+  --surface:  #181B24;
+  --surface2: #1E2130;
+  --border:   #2A2D3E;
+  --border2:  #363A52;
+  --text:     #E2E4EF;
+  --text2:    #9095B0;
+  --text3:    #555A75;
+  --accent:   #6C8EF5;
+  --accent2:  #3D5CE0;
+  --danger:   #F56C6C;
+  --warn:     #F5A623;
+  --success:  #52C07A;
+  --radius:   10px;
+  --radius-sm:6px;
+}
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 13px;
+  padding: 0;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
+
+/* ── HEADER ── */
+.header {
+  padding: 14px 14px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+.header-left { display: flex; align-items: center; gap: 8px; }
+.logo { font-size: 18px; line-height: 1; }
+.app-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+.app-subtitle {
+  font-size: 10px;
+  color: var(--text3);
+  font-family: 'JetBrains Mono', monospace;
+  margin-top: 1px;
+}
+.header-actions { display: flex; gap: 4px; }
+
+/* ── ICON BUTTONS ── */
+.btn-icon {
+  width: 28px; height: 28px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  color: var(--text2);
+  font-size: 13px;
+  transition: all .15s;
+}
+.btn-icon:hover { background: var(--border); color: var(--text); border-color: var(--border2); }
+
+/* ── TABS ── */
+.tabs {
+  display: flex;
+  margin: 0 14px 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 3px;
+  gap: 2px;
+}
+.tab {
+  flex: 1; padding: 6px 8px;
+  text-align: center;
+  font-size: 11px; font-weight: 500;
+  font-family: 'Outfit', sans-serif;
+  letter-spacing: 0.02em;
+  border-radius: 7px;
+  cursor: pointer;
+  color: var(--text2);
+  transition: all .2s;
+  border: none; background: transparent;
+}
+.tab.active {
+  background: var(--surface2);
+  color: var(--text);
+  box-shadow: 0 1px 4px rgba(0,0,0,.4);
+}
+
+/* ── SECTION ── */
+.section { padding: 0 14px; }
+
+/* ── BUTTONS ── */
+.btn {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 12px; font-weight: 500;
+  font-family: 'Outfit', sans-serif;
+  cursor: pointer; transition: all .15s; border: none;
+}
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-primary:hover { background: var(--accent2); }
+.btn-ghost {
+  background: transparent; color: var(--text2);
+  border: 1px solid var(--border);
+}
+.btn-ghost:hover { background: var(--surface2); color: var(--text); border-color: var(--border2); }
+.btn-danger-soft {
+  background: transparent; color: var(--danger);
+  border: 1px solid rgba(245,108,108,.25);
+}
+.btn-danger-soft:hover { background: rgba(245,108,108,.08); }
+.btn-warn-soft {
+  background: transparent; color: var(--warn);
+  border: 1px solid rgba(245,166,35,.25);
+}
+.btn-warn-soft:hover { background: rgba(245,166,35,.08); }
+.btn-sm { padding: 4px 8px; font-size: 11px; }
+.btn-full { width: 100%; justify-content: center; }
+.btn-xs { padding: 3px 7px; font-size: 10px; }
+
+/* ── INPUT ── */
+.input {
+  width: 100%;
+  padding: 7px 10px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px; color: var(--text);
+  outline: none; transition: border-color .15s;
+}
+.input::placeholder { color: var(--text3); }
+.input:focus { border-color: var(--accent); }
+
+/* ── DIVIDER ── */
+.divider { border: none; border-top: 1px solid var(--border); margin: 12px 14px; }
+
+/* ── FOLDER CARD ── */
+.folder-card {
+  margin: 0 14px 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: border-color .2s, opacity .2s;
+  position: relative;
+}
+.folder-card::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: var(--folder-color, var(--border2));
+  border-radius: 10px 0 0 10px;
+  transition: background .2s;
+}
+.folder-card:hover { border-color: var(--border2); }
+.folder-card.hidden-folder { opacity: .4; }
+.folder-card.hidden-folder:hover { opacity: .65; }
+
+.folder-header {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 10px 10px 14px;
+  cursor: pointer; user-select: none;
+}
+.folder-name {
+  flex: 1; font-weight: 500; font-size: 13px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  color: var(--text);
+}
+.folder-meta { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+.folder-count {
+  font-size: 10px; font-weight: 500;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--text3);
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 1px 6px;
+  min-width: 22px; text-align: center;
+}
+.eye-btn {
+  background: none; border: none; cursor: pointer;
+  color: var(--text3); font-size: 13px;
+  padding: 2px 3px; border-radius: 4px;
+  line-height: 1; transition: color .15s;
+}
+.eye-btn:hover { color: var(--text2); }
+.folder-chevron {
+  font-size: 9px; color: var(--text3);
+  transition: transform .2s ease;
+  margin-left: 2px;
+}
+.folder-chevron.open { transform: rotate(90deg); }
+
+/* ── FOLDER BODY ── */
+.folder-body {
+  max-height: 0; overflow: hidden;
+  transition: max-height .25s ease;
+  border-top: 0px solid var(--border);
+}
+.folder-body.open {
+  max-height: 600px;
+  border-top-width: 1px;
+}
+.folder-body-inner { padding: 8px 10px; }
+
+.folder-actions { display: flex; gap: 4px; margin-bottom: 8px; flex-wrap: wrap; align-items: center; }
+.color-picker {
+  width: 26px; height: 26px;
+  border: 1px solid var(--border);
+  border-radius: 5px; cursor: pointer;
+  padding: 2px; background: none;
+}
+
+/* ── SHEET PILLS ── */
+.sheet-pill {
+  display: flex; align-items: center; gap: 6px;
+  padding: 6px 8px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 3px;
+  font-size: 12px;
+  transition: background .1s;
+  border: 1px solid transparent;
+}
+.sheet-pill:hover { background: var(--surface2); border-color: var(--border); }
+.sheet-pill.sheet-hidden { opacity: .35; }
+.sheet-icon { font-size: 11px; flex-shrink: 0; color: var(--text3); }
+.sheet-pill-name {
+  flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  cursor: pointer; color: var(--text);
+}
+.sheet-pill-name:hover { color: var(--accent); }
+.pill-btn {
+  background: none; border: none; cursor: pointer;
+  color: var(--text3); font-size: 12px;
+  padding: 1px 3px; border-radius: 3px; line-height: 1;
+  flex-shrink: 0; transition: color .12s;
+}
+.pill-btn:hover { color: var(--text); }
+.pill-btn.remove:hover { color: var(--danger); }
+.sheet-pill-empty {
+  color: var(--text3); font-size: 11px; font-style: italic;
+  padding: 4px 4px; text-align: center;
+}
+
+/* ── RENAME INPUT ── */
+.rename-input {
+  border: none; background: transparent;
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px; font-weight: 500;
+  color: var(--text); outline: none; flex: 1; min-width: 0;
+  border-bottom: 1px solid var(--accent);
+  padding-bottom: 1px;
+}
+
+/* ── NEW FOLDER FORM ── */
+.new-folder-form {
+  margin: 0 14px 10px;
+  background: var(--surface);
+  border: 1px dashed var(--border2);
+  border-radius: var(--radius);
+  padding: 10px;
+  display: none;
+  animation: slideDown .15s ease;
+}
+.new-folder-form.open { display: block; }
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: none; }
+}
+.form-row { display: flex; gap: 6px; align-items: center; }
+
+/* ── ADD BUTTON ── */
+.add-folder-btn {
+  margin: 0 14px;
+  display: flex; align-items: center; justify-content: center;
+  gap: 6px;
+  padding: 8px;
+  background: transparent;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+  color: var(--text3);
+  font-size: 12px; font-weight: 500;
+  font-family: 'Outfit', sans-serif;
+  cursor: pointer;
+  width: calc(100% - 28px);
+  transition: all .15s;
+}
+.add-folder-btn:hover { border-color: var(--accent); color: var(--accent); background: rgba(108,142,245,.05); }
+
+/* ── ASSIGN TAB ── */
+.assign-sheet {
+  display: flex; align-items: center; gap: 8px;
+  padding: 7px 10px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  margin-bottom: 5px;
+  transition: border-color .15s;
+}
+.assign-sheet:hover { border-color: var(--border2); }
+.assign-name { flex: 1; font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text); }
+.assign-select {
+  font-size: 11px; padding: 4px 6px;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background: var(--surface2);
+  font-family: 'Outfit', sans-serif;
+  color: var(--text); cursor: pointer;
+  max-width: 110px; outline: none;
+  transition: border-color .15s;
+}
+.assign-select:focus { border-color: var(--accent); }
+.assign-select option { background: var(--surface2); }
+
+/* ── DELETE CONFIRM ── */
+.delete-confirm {
+  border-top: 1px solid rgba(245,108,108,.2);
+  background: rgba(245,108,108,.04);
+  padding: 10px;
+  animation: slideDown .15s ease;
+}
+.delete-confirm-msg {
+  font-size: 11px; color: var(--text2);
+  margin-bottom: 8px; line-height: 1.5;
+}
+.delete-confirm-msg strong { color: var(--text); }
+.delete-confirm-actions { display: flex; gap: 5px; flex-wrap: wrap; }
+
+/* ── EMPTY STATE ── */
+.empty-state {
+  padding: 32px 14px;
+  text-align: center;
+  color: var(--text3);
+}
+.empty-icon { font-size: 28px; margin-bottom: 8px; opacity: .5; }
+.empty-title { font-size: 13px; font-weight: 500; color: var(--text2); margin-bottom: 4px; }
+.empty-sub { font-size: 11px; line-height: 1.5; }
+
+/* ── LOADER ── */
+.loader {
+  padding: 24px 14px; text-align: center;
+  color: var(--text3); font-size: 12px;
+}
+.loader::after {
+  content: ''; display: block; width: 20px; height: 20px;
+  margin: 10px auto 0;
+  border: 2px solid var(--border); border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── TOAST ── */
+.toast {
+  position: fixed; bottom: 14px; left: 14px; right: 14px;
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  color: var(--text);
+  padding: 9px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  display: none; z-index: 100;
+  box-shadow: 0 4px 16px rgba(0,0,0,.5);
+  animation: toastIn .2s ease;
+  display: flex; align-items: center; gap: 7px;
+}
+.toast-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--success); flex-shrink: 0; }
+.toast.hidden { display: none !important; }
+@keyframes toastIn {
+  from { opacity:0; transform: translateY(8px); }
+  to   { opacity:1; transform: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-left">
+    <span class="logo">📁</span>
+    <div>
+      <div class="app-title">Sheet Folders</div>
+      <div class="app-subtitle">organize · navigate</div>
+    </div>
+  </div>
+  <div class="header-actions">
+    <button class="btn-icon" onclick="hardRefresh()" title="Synchroniser">↻</button>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab active" id="tab-folders" onclick="switchTab('folders')">Dossiers</button>
+  <button class="tab" id="tab-assign" onclick="switchTab('assign')">Assigner</button>
+</div>
+
+<!-- ══ TAB DOSSIERS ══ -->
+<div id="view-folders">
+  <div class="new-folder-form" id="new-folder-form">
+    <div class="form-row">
+      <input type="color" class="color-picker" id="new-color" value="#6C8EF5">
+      <input class="input" id="new-name" placeholder="Nom du dossier…"
+        onkeydown="if(event.key==='Enter') confirmNewFolder()">
+      <button class="btn btn-primary btn-sm" onclick="confirmNewFolder()">Créer</button>
+      <button class="btn btn-ghost btn-sm" onclick="cancelNewFolder()">✕</button>
+    </div>
+  </div>
+
+  <button class="add-folder-btn" id="btn-add-folder" onclick="openNewFolderForm()">
+    <span>＋</span> Nouveau dossier
+  </button>
+
+  <hr class="divider">
+  <div id="folder-list"><div class="loader"></div></div>
+</div>
+
+<!-- ══ TAB ASSIGNER ══ -->
+<div id="view-assign" style="display:none">
+  <div class="section" style="margin-bottom:10px">
+    <p style="font-size:11px;color:var(--text3);line-height:1.5">
+      Associe chaque feuille à un dossier.<br>La couleur de l'onglet est appliquée automatiquement.
+    </p>
+  </div>
+  <div id="assign-list"><div class="loader"></div></div>
+</div>
+
+<div class="toast hidden" id="toast">
+  <span class="toast-dot" id="toast-dot"></span>
+  <span id="toast-msg"></span>
+</div>
+
+<script>
+let state = { data: { folders:{}, assignments:{} }, sheets:[] };
+let currentTab = 'folders';
+let openFolders = new Set();
+let hiddenFolders = new Set();
+let hiddenSheets  = new Set();
+
+// ── INIT ──
+function init() {
+  google.script.run
+    .withSuccessHandler(s => { state = s; syncHiddenFromServer(); render(); })
+    .withFailureHandler(() => showToast('Erreur chargement', 'err'))
+    .getFullState();
+}
+
+function hardRefresh() {
+  document.getElementById('folder-list').innerHTML = '<div class="loader"></div>';
+  google.script.run
+    .withSuccessHandler(s => { state = s; syncHiddenFromServer(); render(); showToast('Synchronisé'); })
+    .withFailureHandler(() => showToast('Erreur sync', 'err'))
+    .getFullState();
+}
+
+function syncHiddenFromServer() {
+  hiddenSheets.clear(); hiddenFolders.clear();
+  state.sheets.forEach(s => { if (s.hidden) hiddenSheets.add(s.name); });
+  const { folders, assignments } = state.data;
+  Object.keys(folders).forEach(id => {
+    const fs = state.sheets.filter(s => assignments[s.name] === id);
+    if (fs.length > 0 && fs.every(s => s.hidden)) hiddenFolders.add(id);
+  });
+}
+
+// ── TABS ──
+function switchTab(tab) {
+  currentTab = tab;
+  document.getElementById('view-folders').style.display = tab === 'folders' ? '' : 'none';
+  document.getElementById('view-assign').style.display  = tab === 'assign'  ? '' : 'none';
+  document.getElementById('tab-folders').classList.toggle('active', tab === 'folders');
+  document.getElementById('tab-assign').classList.toggle('active', tab === 'assign');
+  if (tab === 'assign') {
+    document.getElementById('assign-list').innerHTML = '<div class="loader"></div>';
+    google.script.run
+      .withSuccessHandler(sheets => { state.sheets = sheets; render(); })
+      .withFailureHandler(() => render())
+      .getSheets();
+  } else {
+    render();
+  }
+}
+
+// ── RENDER ──
+function render() {
+  if (currentTab === 'folders') renderFolders();
+  else renderAssign();
+}
+
+function renderFolders() {
+  const { folders, assignments } = state.data;
+  const { sheets } = state;
+  const list = document.getElementById('folder-list');
+
+  if (!Object.keys(folders).length) {
+    list.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">🗂</div>
+        <div class="empty-title">Aucun dossier</div>
+        <div class="empty-sub">Crée ton premier dossier<br>pour organiser tes feuilles.</div>
+      </div>`;
+    return;
+  }
+
+  list.innerHTML = Object.entries(folders).map(([id, f]) => {
+    const folderSheets = sheets.filter(s => assignments[s.name] === id);
+    const isOpen   = openFolders.has(id);
+    const isHidden = hiddenFolders.has(id);
+
+    const sheetItems = folderSheets.length
+      ? folderSheets.map(s => {
+          const sh = hiddenSheets.has(s.name);
+          return `<div class="sheet-pill ${sh ? 'sheet-hidden' : ''}">
+            <span class="sheet-icon">◻</span>
+            <span class="sheet-pill-name" onclick="navTo('${esc(s.name)}')" title="${esc(s.name)}">${esc(s.name)}</span>
+            <button class="pill-btn" onclick="toggleSheetVis('${esc(s.name)}',${sh})" title="${sh?'Afficher':'Masquer'}">${sh?'○':'●'}</button>
+            <button class="pill-btn remove" onclick="unassign('${esc(s.name)}')" title="Retirer">✕</button>
+          </div>`;
+        }).join('')
+      : '<div class="sheet-pill-empty">Aucune feuille assignée</div>';
+
+    return `
+      <div class="folder-card ${isHidden?'hidden-folder':''}" style="--folder-color:${f.color}" data-folder-id="${id}">
+        <div class="folder-header" onclick="toggleFolder('${id}')">
+          <span class="folder-name" id="fname-${id}">${esc(f.name)}</span>
+          <span class="folder-meta">
+            <span class="folder-count">${folderSheets.length}</span>
+            <button class="eye-btn" onclick="event.stopPropagation();toggleFolderVis('${id}',${isHidden})"
+              title="${isHidden?'Afficher':'Masquer'}">${isHidden?'○':'●'}</button>
+            <span class="folder-chevron ${isOpen?'open':''}">▶</span>
+          </span>
+        </div>
+        <div class="folder-body ${isOpen?'open':''}">
+          <div class="folder-body-inner">
+            <div class="folder-actions">
+              <button class="btn btn-ghost btn-sm" onclick="startRename('${id}')">✏ Renommer</button>
+              <input type="color" class="color-picker" value="${f.color}"
+                onchange="changeColor('${id}',this.value)" title="Couleur">
+              <button class="btn btn-danger-soft btn-sm" onclick="doDelete('${id}')">🗑</button>
+            </div>
+            ${sheetItems}
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function toggleFolder(id) {
+  openFolders.has(id) ? openFolders.delete(id) : openFolders.add(id);
+  render();
+}
+
+function renderAssign() {
+  const { folders, assignments } = state.data;
+  const { sheets } = state;
+  const list = document.getElementById('assign-list');
+
+  if (!sheets.length) {
+    list.innerHTML = `<div class="empty-state">
+      <div class="empty-icon">📄</div>
+      <div class="empty-title">Aucune feuille</div>
+    </div>`;
+    return;
+  }
+
+  list.innerHTML = '<div class="section">' + sheets.map(s => {
+    const opts = Object.entries(folders).map(([id, f]) =>
+      `<option value="${id}" ${assignments[s.name]===id?'selected':''}>${esc(f.name)}</option>`
+    ).join('');
+    const assigned = assignments[s.name];
+    const dot = assigned && folders[assigned]
+      ? `<span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${folders[assigned].color};margin-right:4px;flex-shrink:0"></span>`
+      : `<span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--border2);margin-right:4px;flex-shrink:0"></span>`;
+    return `
+      <div class="assign-sheet">
+        ${dot}
+        <span class="assign-name" title="${esc(s.name)}">📄 ${esc(s.name)}</span>
+        <select class="assign-select" onchange="assignTo('${esc(s.name)}',this.value)">
+          <option value="">— Aucun —</option>${opts}
+        </select>
+      </div>`;
+  }).join('') + '</div>';
+}
+
+// ── VISIBILITÉ DOSSIER ──
+function toggleFolderVis(id, wasHidden) {
+  const makeVisible = wasHidden;
+  const folderSheets = state.sheets.filter(s => state.data.assignments[s.name] === id);
+  if (makeVisible) {
+    hiddenFolders.delete(id);
+    folderSheets.forEach(s => hiddenSheets.delete(s.name));
+    showToast('Dossier affiché');
+  } else {
+    hiddenFolders.add(id);
+    folderSheets.forEach(s => hiddenSheets.add(s.name));
+    showToast('Dossier masqué');
+  }
+  render();
+  google.script.run.withFailureHandler(() => showToast('⚠ Erreur', 'err')).toggleFolderVisibility(id, makeVisible);
+}
+
+// ── VISIBILITÉ FEUILLE ──
+function toggleSheetVis(name, wasHidden) {
+  const makeVisible = wasHidden;
+  if (makeVisible) hiddenSheets.delete(name); else hiddenSheets.add(name);
+  const { folders, assignments } = state.data;
+  Object.keys(folders).forEach(id => {
+    const fs = state.sheets.filter(s => assignments[s.name] === id);
+    if (fs.length > 0 && fs.every(s => hiddenSheets.has(s.name))) hiddenFolders.add(id);
+    else hiddenFolders.delete(id);
+  });
+  render();
+  showToast(makeVisible ? 'Feuille affichée' : 'Feuille masquée');
+  if (makeVisible) google.script.run.withFailureHandler(() => showToast('⚠ Erreur','err')).showSheetByName(name);
+  else            google.script.run.withFailureHandler(() => showToast('⚠ Erreur','err')).hideSheetByName(name);
+}
+
+// ── OPTIMISTIC ──
+function optimistic(localUpdate, serverFn, ...args) {
+  localUpdate(); render();
+  google.script.run.withFailureHandler(() => showToast('⚠ Erreur serveur', 'err'))[serverFn](...args);
+}
+
+// ── NOUVEAU DOSSIER ──
+function openNewFolderForm() {
+  document.getElementById('new-folder-form').classList.add('open');
+  document.getElementById('btn-add-folder').style.display = 'none';
+  setTimeout(() => document.getElementById('new-name').focus(), 80);
+}
+function cancelNewFolder() {
+  document.getElementById('new-folder-form').classList.remove('open');
+  document.getElementById('btn-add-folder').style.display = '';
+  document.getElementById('new-name').value = '';
+}
+function confirmNewFolder() {
+  const name = document.getElementById('new-name').value.trim();
+  if (!name) { showToast('Donne un nom au dossier', 'warn'); return; }
+  const color = document.getElementById('new-color').value;
+  const id = 'f_' + Date.now();
+  optimistic(
+    () => { state.data.folders[id] = { name, color }; cancelNewFolder(); showToast('Dossier créé'); },
+    'createFolder', name, color
+  );
+  google.script.run.withSuccessHandler(realId => {
+    if (realId !== id) {
+      const d = state.data.folders[id];
+      delete state.data.folders[id];
+      state.data.folders[realId] = d;
+      for (const s in state.data.assignments)
+        if (state.data.assignments[s] === id) state.data.assignments[s] = realId;
+      render();
+    }
+  }).createFolder(name, color);
+}
+
+// ── RENOMMER ──
+function startRename(id) {
+  const span = document.getElementById('fname-' + id);
+  const cur = state.data.folders[id]?.name || '';
+  span.innerHTML = `<input class="rename-input" value="${esc(cur)}"
+    onclick="event.stopPropagation()"
+    onblur="doRename('${id}',this.value)"
+    onkeydown="if(event.key==='Enter')this.blur();if(event.key==='Escape'){this.value='${esc(cur)}';this.blur()}">`;
+  span.querySelector('input').focus();
+}
+function doRename(id, val) {
+  val = val.trim();
+  if (!val || val === state.data.folders[id]?.name) { render(); return; }
+  optimistic(() => { state.data.folders[id].name = val; showToast('Renommé'); }, 'renameFolder', id, val);
+}
+
+// ── COULEUR ──
+function changeColor(id, color) {
+  optimistic(() => { state.data.folders[id].color = color; }, 'updateFolderColor', id, color);
+}
+
+// ── SUPPRIMER ──
+function doDelete(id) {
+  document.querySelectorAll('.delete-confirm').forEach(el => el.remove());
+  const card = document.querySelector(`[data-folder-id="${id}"]`);
+  if (!card) return;
+  const name = state.data.folders[id]?.name || '';
+  const count = state.sheets.filter(s => state.data.assignments[s.name] === id).length;
+  const panel = document.createElement('div');
+  panel.className = 'delete-confirm';
+  panel.innerHTML = `
+    <div class="delete-confirm-msg">
+      Que faire des <strong>${count} feuille${count>1?'s':''}</strong> du dossier <strong>${esc(name)}</strong> ?
+    </div>
+    <div class="delete-confirm-actions">
+      <button class="btn btn-warn-soft btn-xs" onclick="confirmDissociate('${id}')">📂 Dissocier</button>
+      ${count > 0 ? `<button class="btn btn-danger-soft btn-xs" onclick="confirmDeleteAll('${id}')">🗑 Supprimer les feuilles</button>` : ''}
+      <button class="btn btn-ghost btn-xs" onclick="this.closest('.delete-confirm').remove()">Annuler</button>
+    </div>`;
+  card.appendChild(panel);
+}
+
+function confirmDissociate(id) {
+  optimistic(() => {
+    delete state.data.folders[id];
+    for (const s in state.data.assignments)
+      if (state.data.assignments[s] === id) delete state.data.assignments[s];
+    hiddenFolders.delete(id);
+    showToast('Dossier supprimé, feuilles conservées');
+  }, 'deleteFolder', id);
+}
+
+function confirmDeleteAll(id) {
+  const name = state.data.folders[id]?.name || '';
+  const folderSheets = state.sheets.filter(s => state.data.assignments[s.name] === id);
+  if (!confirm(`Supprimer définitivement le dossier "${name}" et ses ${folderSheets.length} feuille(s) ?\nCette action est irréversible.`)) return;
+  optimistic(() => {
+    const names = folderSheets.map(s => s.name);
+    state.sheets = state.sheets.filter(s => !names.includes(s.name));
+    delete state.data.folders[id];
+    for (const s in state.data.assignments)
+      if (state.data.assignments[s] === id) delete state.data.assignments[s];
+    hiddenFolders.delete(id);
+    names.forEach(n => hiddenSheets.delete(n));
+    showToast('Dossier et feuilles supprimés');
+  }, 'deleteFolderAndSheets', id);
+}
+
+// ── ASSIGNATION ──
+function assignTo(sheetName, folderId) {
+  optimistic(() => {
+    if (!folderId) delete state.data.assignments[sheetName];
+    else state.data.assignments[sheetName] = folderId;
+    showToast('Assigné');
+  }, 'assignSheet', sheetName, folderId);
+}
+
+function unassign(sheetName) {
+  optimistic(() => { delete state.data.assignments[sheetName]; showToast('Retiré'); }, 'assignSheet', sheetName, null);
+}
+
+// ── NAVIGATION ──
+function navTo(name) {
+  google.script.run.goToSheet(name);
+  showToast('→ ' + name);
+}
+
+// ── TOAST ──
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  const dot = document.getElementById('toast-dot');
+  document.getElementById('toast-msg').textContent = msg;
+  dot.style.background = type === 'err' ? 'var(--danger)' : type === 'warn' ? 'var(--warn)' : 'var(--success)';
+  t.classList.remove('hidden');
+  t.style.animation = 'none';
+  void t.offsetWidth;
+  t.style.animation = 'toastIn .2s ease';
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.add('hidden'), 2400);
+}
+
+// ── ESC ──
+function esc(str) {
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+init();
+</script>
+</body>
+</html>

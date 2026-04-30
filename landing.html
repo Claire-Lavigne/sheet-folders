@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sheet Folders — Organise tes onglets Google Sheets</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:      #0A0C12;
+  --bg2:     #0F1117;
+  --surface: #141720;
+  --surface2:#1A1E2B;
+  --border:  #232738;
+  --border2: #2E3349;
+  --text:    #E4E6F0;
+  --text2:   #8B91B0;
+  --text3:   #4A506A;
+  --accent:  #6C8EF5;
+  --accent2: #4A6FE0;
+  --green:   #52C07A;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ── NOISE OVERLAY ── */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 0; opacity: .4;
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 16px 40px;
+  display: flex; align-items: center; justify-content: space-between;
+  background: rgba(10,12,18,.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-logo { display: flex; align-items: center; gap: 10px; }
+.nav-logo-icon { font-size: 20px; }
+.nav-logo-text { font-size: 15px; font-weight: 600; letter-spacing: -0.02em; }
+.nav-links { display: flex; align-items: center; gap: 28px; }
+.nav-links a {
+  font-size: 13px; color: var(--text2); text-decoration: none;
+  transition: color .15s;
+}
+.nav-links a:hover { color: var(--text); }
+.nav-cta {
+  padding: 7px 16px;
+  background: var(--accent);
+  color: #fff; border: none; border-radius: 8px;
+  font-size: 13px; font-weight: 500; font-family: 'Outfit', sans-serif;
+  cursor: pointer; text-decoration: none;
+  transition: background .15s;
+}
+.nav-cta:hover { background: var(--accent2); }
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 120px 40px 80px;
+  position: relative; text-align: center;
+}
+
+/* Glow */
+.hero::after {
+  content: '';
+  position: absolute;
+  width: 600px; height: 400px;
+  background: radial-gradient(ellipse, rgba(108,142,245,.12) 0%, transparent 70%);
+  top: 50%; left: 50%; transform: translate(-50%, -60%);
+  pointer-events: none;
+}
+
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 5px 12px;
+  background: rgba(108,142,245,.1);
+  border: 1px solid rgba(108,142,245,.25);
+  border-radius: 20px;
+  font-size: 11px; font-weight: 500; color: var(--accent);
+  font-family: 'JetBrains Mono', monospace;
+  margin-bottom: 28px;
+  animation: fadeUp .5s ease both;
+}
+.hero-badge::before { content: '●'; font-size: 8px; }
+
+.hero-title {
+  font-size: clamp(36px, 6vw, 64px);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  margin-bottom: 20px;
+  animation: fadeUp .5s .1s ease both;
+}
+.hero-title span {
+  background: linear-gradient(135deg, #fff 30%, var(--accent));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-sub {
+  font-size: 17px; color: var(--text2); font-weight: 400;
+  max-width: 480px; margin: 0 auto 36px;
+  animation: fadeUp .5s .2s ease both;
+}
+
+.hero-actions {
+  display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
+  animation: fadeUp .5s .3s ease both;
+}
+.btn-hero {
+  padding: 12px 24px; border-radius: 10px;
+  font-size: 14px; font-weight: 500; font-family: 'Outfit', sans-serif;
+  cursor: pointer; text-decoration: none; transition: all .15s;
+  display: inline-flex; align-items: center; gap: 8px; border: none;
+}
+.btn-hero-primary { background: var(--accent); color: #fff; }
+.btn-hero-primary:hover { background: var(--accent2); transform: translateY(-1px); }
+.btn-hero-ghost {
+  background: transparent; color: var(--text2);
+  border: 1px solid var(--border2);
+}
+.btn-hero-ghost:hover { background: var(--surface); color: var(--text); }
+
+/* Preview window */
+.hero-preview {
+  margin-top: 60px; position: relative;
+  animation: fadeUp .6s .4s ease both;
+}
+.preview-window {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 32px 80px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.04);
+  max-width: 680px; margin: 0 auto;
+}
+.preview-bar {
+  display: flex; align-items: center; gap: 6px;
+  padding: 12px 16px;
+  background: var(--surface2);
+  border-bottom: 1px solid var(--border);
+}
+.preview-dot { width: 10px; height: 10px; border-radius: 50%; }
+.preview-title {
+  flex: 1; text-align: center;
+  font-size: 11px; color: var(--text3);
+  font-family: 'JetBrains Mono', monospace;
+}
+.preview-body { display: flex; }
+.preview-sheet {
+  flex: 1;
+  background: #fff;
+  height: 320px;
+  position: relative;
+  display: flex; align-items: center; justify-content: center;
+}
+.preview-sheet-inner {
+  width: 90%; height: 85%;
+  display: grid; grid-template-columns: 80px repeat(4, 1fr);
+  grid-template-rows: 28px repeat(6, 1fr);
+  gap: 1px; background: #E8EBF0;
+  border: 1px solid #E8EBF0;
+}
+.cell {
+  background: #fff; font-size: 9px; color: #555;
+  display: flex; align-items: center; padding: 0 6px;
+}
+.cell.header { background: #F0F2F8; font-weight: 600; color: #333; }
+.cell.bold { font-weight: 600; color: #222; }
+.cell.num { color: #1A56DB; }
+.cell.green { color: #166534; background: #F0FDF4; }
+.cell.yellow { background: #FEFCE8; }
+
+/* Tabs at bottom */
+.preview-tabs {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  display: flex; gap: 2px; padding: 0 8px;
+  background: #F0F2F5; border-top: 1px solid #DDE1E8;
+  height: 28px; align-items: center;
+}
+.tab-pill {
+  padding: 3px 10px; border-radius: 4px 4px 0 0;
+  font-size: 9px; font-weight: 500;
+  border: 1px solid transparent; border-bottom: none;
+  cursor: default; white-space: nowrap;
+}
+.tab-pill.active { background: #fff; border-color: #DDE1E8; color: #111; }
+.tab-pill.t1 { color: #fff; border-color: transparent; }
+.tab-pill.t2 { color: #fff; border-color: transparent; }
+.tab-pill.t3 { color: #fff; border-color: transparent; }
+.tab-pill.t4 { color: #fff; border-color: transparent; }
+.tab-pill.grey { background: #E8EBF0; color: #666; border-color: #DDE1E8; }
+
+/* Sidebar preview */
+.preview-sidebar {
+  width: 200px; flex-shrink: 0;
+  border-left: 1px solid var(--border);
+  background: var(--bg2);
+  padding: 12px 10px;
+}
+.ps-header {
+  display: flex; align-items: center; gap: 6px;
+  margin-bottom: 12px;
+}
+.ps-title { font-size: 12px; font-weight: 600; color: var(--text); }
+.ps-folder {
+  border-radius: 7px; overflow: hidden;
+  border: 1px solid var(--border);
+  margin-bottom: 6px;
+  position: relative;
+}
+.ps-folder::before {
+  content: '';
+  position: absolute; left: 0; top: 0; bottom: 0;
+  width: 3px; background: var(--fc, #6C8EF5);
+  border-radius: 7px 0 0 7px;
+}
+.ps-folder-header {
+  display: flex; align-items: center; gap: 6px;
+  padding: 7px 8px 7px 12px;
+  font-size: 11px; font-weight: 500; color: var(--text);
+}
+.ps-count {
+  margin-left: auto;
+  font-size: 9px; color: var(--text3);
+  font-family: 'JetBrains Mono', monospace;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 10px; padding: 1px 5px;
+}
+.ps-sheets { border-top: 1px solid var(--border); padding: 5px 8px 5px 12px; }
+.ps-sheet {
+  font-size: 10px; color: var(--text2);
+  padding: 3px 0; display: flex; align-items: center; gap: 4px;
+}
+.ps-dot-tiny { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+
+/* ── FEATURES ── */
+.features {
+  padding: 100px 40px;
+  max-width: 1100px; margin: 0 auto;
+}
+.section-label {
+  font-size: 11px; font-weight: 500;
+  color: var(--accent);
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: .1em; text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.section-title {
+  font-size: clamp(24px, 3vw, 36px);
+  font-weight: 700; letter-spacing: -0.02em;
+  margin-bottom: 12px;
+}
+.section-sub { font-size: 15px; color: var(--text2); max-width: 480px; margin-bottom: 56px; }
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+.feature-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px; padding: 24px;
+  transition: border-color .2s, transform .2s;
+}
+.feature-card:hover { border-color: var(--border2); transform: translateY(-2px); }
+.feature-icon { font-size: 22px; margin-bottom: 12px; }
+.feature-title { font-size: 14px; font-weight: 600; margin-bottom: 6px; }
+.feature-desc { font-size: 13px; color: var(--text2); line-height: 1.6; }
+
+/* ── TECH ── */
+.tech-section {
+  padding: 80px 40px;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.tech-inner { max-width: 900px; margin: 0 auto; }
+.tech-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 40px; }
+.tech-item { }
+.tech-item-label {
+  font-size: 10px; font-weight: 500; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--text3);
+  font-family: 'JetBrains Mono', monospace;
+  margin-bottom: 6px;
+}
+.tech-item-value { font-size: 15px; font-weight: 500; color: var(--text); }
+.tech-item-desc { font-size: 13px; color: var(--text2); margin-top: 3px; line-height: 1.5; }
+
+.code-block {
+  background: var(--bg);
+  border: 1px solid var(--border2);
+  border-radius: 10px; padding: 20px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px; line-height: 1.7;
+  color: var(--text2); margin-top: 40px;
+  overflow-x: auto;
+}
+.code-comment { color: var(--text3); }
+.code-keyword { color: #C792EA; }
+.code-fn { color: var(--accent); }
+.code-string { color: var(--green); }
+
+/* ── INSTALL ── */
+.install-section { padding: 100px 40px; max-width: 900px; margin: 0 auto; }
+.steps { margin-top: 40px; display: flex; flex-direction: column; gap: 0; }
+.step {
+  display: flex; gap: 20px; padding: 24px 0;
+  border-bottom: 1px solid var(--border);
+}
+.step:last-child { border-bottom: none; }
+.step-num {
+  width: 36px; height: 36px; flex-shrink: 0;
+  background: rgba(108,142,245,.1);
+  border: 1px solid rgba(108,142,245,.2);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 600; color: var(--accent);
+  font-family: 'JetBrains Mono', monospace;
+  margin-top: 2px;
+}
+.step-content { flex: 1; }
+.step-title { font-size: 15px; font-weight: 600; margin-bottom: 5px; }
+.step-desc { font-size: 13px; color: var(--text2); line-height: 1.6; }
+.step-code {
+  display: inline-block; margin-top: 8px;
+  background: var(--surface2); border: 1px solid var(--border2);
+  border-radius: 5px; padding: 3px 8px;
+  font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--accent);
+}
+
+/* ── FOOTER ── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 40px;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 16px;
+}
+.footer-logo { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; }
+.footer-links { display: flex; gap: 20px; }
+.footer-links a { font-size: 13px; color: var(--text2); text-decoration: none; transition: color .15s; }
+.footer-links a:hover { color: var(--text); }
+.footer-credit { font-size: 12px; color: var(--text3); }
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: none; }
+}
+.reveal { opacity: 0; transform: translateY(20px); transition: opacity .5s ease, transform .5s ease; }
+.reveal.visible { opacity: 1; transform: none; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <span class="nav-logo-icon">📁</span>
+    <span class="nav-logo-text">Sheet Folders</span>
+  </div>
+  <div class="nav-links">
+    <a href="#features">Fonctionnalités</a>
+    <a href="#tech">Technique</a>
+    <a href="#install">Installation</a>
+    <a href="https://github.com" target="_blank">GitHub ↗</a>
+    <a href="case-study.html" class="nav-cta">Case Study</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">Google Apps Script · Open Source</div>
+  <h1 class="hero-title">
+    Des dossiers pour<br><span>tes onglets Sheets</span>
+  </h1>
+  <p class="hero-sub">
+    Google Sheets n'organise pas tes feuilles. Sheet Folders le fait — directement dans ta sidebar, sans serveur, sans friction.
+  </p>
+  <div class="hero-actions">
+    <a href="#install" class="btn-hero btn-hero-primary">
+      ↓ Installer gratuitement
+    </a>
+    <a href="https://github.com" class="btn-hero btn-hero-ghost" target="_blank">
+      Voir le code →
+    </a>
+  </div>
+
+  <!-- Preview -->
+  <div class="hero-preview">
+    <div class="preview-window">
+      <div class="preview-bar">
+        <div class="preview-dot" style="background:#FF5F57"></div>
+        <div class="preview-dot" style="background:#FFBD2E"></div>
+        <div class="preview-dot" style="background:#28C840"></div>
+        <span class="preview-title">Mon Fichier de Suivi — Google Sheets</span>
+      </div>
+      <div class="preview-body">
+        <!-- Sheet -->
+        <div class="preview-sheet">
+          <div class="preview-sheet-inner">
+            <div class="cell header"></div>
+            <div class="cell header">Jan</div>
+            <div class="cell header">Fév</div>
+            <div class="cell header">Mar</div>
+            <div class="cell header">Total</div>
+            <div class="cell bold">CA</div>
+            <div class="cell num">12 400</div>
+            <div class="cell num">14 200</div>
+            <div class="cell num">11 800</div>
+            <div class="cell num bold">38 400</div>
+            <div class="cell bold">Charges</div>
+            <div class="cell">8 200</div>
+            <div class="cell">9 100</div>
+            <div class="cell">7 900</div>
+            <div class="cell">25 200</div>
+            <div class="cell bold">Marge</div>
+            <div class="cell green">4 200</div>
+            <div class="cell green">5 100</div>
+            <div class="cell green">3 900</div>
+            <div class="cell green bold">13 200</div>
+            <div class="cell bold">Objectif</div>
+            <div class="cell yellow">15 000</div>
+            <div class="cell yellow">15 000</div>
+            <div class="cell yellow">15 000</div>
+            <div class="cell yellow">45 000</div>
+            <div class="cell bold">Écart</div>
+            <div class="cell" style="color:#DC2626">−2 600</div>
+            <div class="cell" style="color:#DC2626">−800</div>
+            <div class="cell" style="color:#DC2626">−3 200</div>
+            <div class="cell" style="color:#DC2626">−6 600</div>
+            <div class="cell bold">%</div>
+            <div class="cell">83%</div>
+            <div class="cell">95%</div>
+            <div class="cell">79%</div>
+            <div class="cell bold">85%</div>
+          </div>
+          <div class="preview-tabs">
+            <div class="tab-pill active">Budget Q1</div>
+            <div class="tab-pill t1" style="background:#6C8EF5">Suivi Jan</div>
+            <div class="tab-pill t2" style="background:#6C8EF5">Suivi Fév</div>
+            <div class="tab-pill t3" style="background:#52C07A">Équipe A</div>
+            <div class="tab-pill t4" style="background:#52C07A">Équipe B</div>
+            <div class="tab-pill grey">…</div>
+          </div>
+        </div>
+        <!-- Sidebar -->
+        <div class="preview-sidebar">
+          <div class="ps-header">
+            <span>📁</span>
+            <span class="ps-title">Sheet Folders</span>
+          </div>
+          <div class="ps-folder" style="--fc:#6C8EF5">
+            <div class="ps-folder-header">
+              Budget <span class="ps-count">3</span>
+            </div>
+            <div class="ps-sheets">
+              <div class="ps-sheet"><div class="ps-dot-tiny" style="background:#6C8EF5"></div>Budget Q1</div>
+              <div class="ps-sheet"><div class="ps-dot-tiny" style="background:#6C8EF5"></div>Suivi Jan</div>
+              <div class="ps-sheet"><div class="ps-dot-tiny" style="background:#6C8EF5"></div>Suivi Fév</div>
+            </div>
+          </div>
+          <div class="ps-folder" style="--fc:#52C07A">
+            <div class="ps-folder-header">
+              Équipes <span class="ps-count">2</span>
+            </div>
+            <div class="ps-sheets">
+              <div class="ps-sheet"><div class="ps-dot-tiny" style="background:#52C07A"></div>Équipe A</div>
+              <div class="ps-sheet"><div class="ps-dot-tiny" style="background:#52C07A"></div>Équipe B</div>
+            </div>
+          </div>
+          <div class="ps-folder" style="--fc:#F5A623">
+            <div class="ps-folder-header">
+              Archive <span class="ps-count">4</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+  <div class="reveal">
+    <div class="section-label">Fonctionnalités</div>
+    <h2 class="section-title">Tout ce dont tu as besoin.<br>Rien de plus.</h2>
+    <p class="section-sub">Une sidebar pensée pour les power users de Google Sheets qui veulent reprendre le contrôle de leurs fichiers complexes.</p>
+  </div>
+  <div class="features-grid reveal">
+    <div class="feature-card">
+      <div class="feature-icon">🗂</div>
+      <div class="feature-title">Dossiers personnalisables</div>
+      <div class="feature-desc">Crée autant de dossiers que tu veux, avec un nom et une couleur. Les onglets Google Sheets se colorient automatiquement.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">⚡</div>
+      <div class="feature-title">Interface instantanée</div>
+      <div class="feature-desc">Toutes les actions sont optimistes — elles s'affichent immédiatement sans attendre le serveur. Zéro latence perçue.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">👁</div>
+      <div class="feature-title">Contrôle de visibilité</div>
+      <div class="feature-desc">Masque ou affiche un dossier entier d'un clic, ou feuille par feuille. Garde le focus sur ce qui compte maintenant.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🧭</div>
+      <div class="feature-title">Navigation directe</div>
+      <div class="feature-desc">Clique sur n'importe quelle feuille dans la sidebar pour y aller directement. Plus besoin de faire défiler 40 onglets.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🗑</div>
+      <div class="feature-title">Suppression flexible</div>
+      <div class="feature-desc">Supprime un dossier en choisissant : dissocier les feuilles (les garder) ou les supprimer définitivement avec lui.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔒</div>
+      <div class="feature-title">Sans serveur externe</div>
+      <div class="feature-desc">Tout tourne dans l'écosystème Google. Pas de compte, pas de clé API, pas de données qui quittent ton fichier.</div>
+    </div>
+  </div>
+</section>
+
+<!-- TECH -->
+<section class="tech-section" id="tech">
+  <div class="tech-inner">
+    <div class="reveal">
+      <div class="section-label">Stack technique</div>
+      <h2 class="section-title">Simple. Robuste. Sans dépendances.</h2>
+    </div>
+    <div class="tech-grid reveal">
+      <div class="tech-item">
+        <div class="tech-item-label">Interface</div>
+        <div class="tech-item-value">HTML · CSS · JS vanilla</div>
+        <div class="tech-item-desc">Sidebar 280px, thème sombre, animations CSS, aucun framework.</div>
+      </div>
+      <div class="tech-item">
+        <div class="tech-item-label">Logique serveur</div>
+        <div class="tech-item-value">Google Apps Script</div>
+        <div class="tech-item-desc">JavaScript côté serveur Google. Accès natif à l'API Sheets et à PropertiesService.</div>
+      </div>
+      <div class="tech-item">
+        <div class="tech-item-label">Stockage</div>
+        <div class="tech-item-value">PropertiesService</div>
+        <div class="tech-item-desc">Clé-valeur intégré à Apps Script. Lié au fichier, persistant, sans base de données externe.</div>
+      </div>
+      <div class="tech-item">
+        <div class="tech-item-label">Pattern clé</div>
+        <div class="tech-item-value">Optimistic UI</div>
+        <div class="tech-item-desc">State local mis à jour immédiatement. Sync serveur en arrière-plan. Latence Apps Script invisible.</div>
+      </div>
+    </div>
+    <div class="code-block reveal">
+<span class="code-comment">// Toutes les actions suivent ce pattern</span>
+<span class="code-keyword">function</span> <span class="code-fn">optimistic</span>(localUpdate, serverFn, ...args) {
+  localUpdate();   <span class="code-comment">// → state local mis à jour</span>
+  render();        <span class="code-comment">// → UI re-rendue instantanément</span>
+  google.script.run
+    .withFailureHandler(() => showToast(<span class="code-string">'⚠ Erreur serveur'</span>))
+    [serverFn](...args); <span class="code-comment">// → sync background</span>
+}
+    </div>
+  </div>
+</section>
+
+<!-- INSTALL -->
+<section class="install-section" id="install">
+  <div class="reveal">
+    <div class="section-label">Installation</div>
+    <h2 class="section-title">En place en 2 minutes.</h2>
+    <p class="section-sub">Aucune installation système. Tout se passe dans l'éditeur Apps Script intégré à Google Sheets.</p>
+  </div>
+  <div class="steps reveal">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <div class="step-title">Ouvre l'éditeur Apps Script</div>
+        <div class="step-desc">Dans ton Google Sheet, clique sur <strong>Extensions → Apps Script</strong>. L'éditeur s'ouvre dans un nouvel onglet.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <div class="step-title">Colle le fichier Code.gs</div>
+        <div class="step-desc">Remplace le contenu du fichier <code class="step-code">Code.gs</code> par le code du dépôt GitHub.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <div class="step-title">Crée le fichier Sidebar.html</div>
+        <div class="step-desc">Clique sur <strong>+</strong> → <strong>HTML</strong> → nomme-le exactement <code class="step-code">Sidebar</code> → colle le contenu.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <div class="step-title">Sauvegarde et rafraîchis</div>
+        <div class="step-desc"><code class="step-code">Ctrl+S</code> dans l'éditeur, puis rafraîchis ton Google Sheet. Le menu <strong>📁 Dossiers</strong> apparaît dans la barre de menu.</div>
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:40px;text-align:center" class="reveal">
+    <a href="https://github.com" class="btn-hero btn-hero-primary" target="_blank">
+      Voir le code sur GitHub →
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">
+    <span>📁</span> Sheet Folders
+  </div>
+  <div class="footer-links">
+    <a href="https://github.com" target="_blank">GitHub</a>
+    <a href="case-study.html">Case Study</a>
+  </div>
+  <div class="footer-credit">Fait par Claire — développeuse front-end</div>
+</footer>
+
+<script>
+// Scroll reveal
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
