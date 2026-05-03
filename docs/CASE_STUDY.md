@@ -32,8 +32,8 @@ Ce projet a été construit avec [Claude.ai](https://claude.ai) comme outil d'im
 
 | Problème | Contrainte | Solution | Résultat |
 |---|---|---|---|
-| Latence de 1–2s sur chaque action serveur | `google.script.run` est asynchrone et lent | Optimistic UI — l'état local se met à jour immédiatement, le serveur sync en arrière-plan | Interface instantanée, latence invisible |
-| Rechargement global après chaque action | Sans état local, chaque action rechargeait tout | Un seul `getFullState()` au démarrage, état géré côté client ensuite | Zéro rechargement visible |
+| Latence de 1–2s sur chaque action serveur | `google.script.run` est asynchrone et lent | Optimistic UI — Mise à jour de l'état local, le serveur sync en arrière-plan | Réduction de la latence |
+| Rechargement global après chaque action | Sans état local, chaque action rechargeait tout | Un seul `getFullState()` au démarrage, état géré côté client ensuite | Moins de rechargement inutile |
 | Deux appels `init()` au chargement | Deux balises `<script>` dans le HTML par accident | Suppression du bloc script dupliqué | Plus de doublon de dossier à la création |
 
 ### Contraintes de l'API Google Sheets
