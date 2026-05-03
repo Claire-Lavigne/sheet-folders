@@ -1,8 +1,8 @@
 # 📁 Sheet Folders
 
-> Organise tes onglets Google Sheets en dossiers, avec navigation, couleurs et contrôle de visibilité  — directement dans une sidebar.
-
 Google Sheets ne propose pas de système de dossiers. Sur un fichier avec 20+ feuilles, retrouver ce qu'on cherche devient vite ingérable. 
+
+Avec Sheet Folders, organise tes onglets Google Sheets en dossiers, avec navigation, couleurs et contrôle de visibilité  — directement dans une sidebar.  
 
 ![Sheet Folders preview](preview.gif)
 
@@ -37,7 +37,19 @@ Dans ton Google Sheet : **Extensions → Apps Script**
 ### 3. Sauvegarde et recharge
 
 `Ctrl+S` dans l'éditeur, puis **rafraîchis** ton Google Sheet.  
-Le menu **📁 Dossiers** apparaît dans la barre de menu.
+Le menu **📁 Sheet Folders** apparaît dans la barre de menu.
+
+### 4. Autorisation requise
+
+Au premier lancement, Google affiche un avertissement de sécurité.  
+C'est normal pour tout script non publié officiellement.
+
+1. Clique sur **Avancé**
+2. Clique sur **Accéder à Sheet Folders (non sécurisé)**
+3. Accepte les permissions
+
+Le script accède uniquement au fichier Google Sheets dans lequel  
+il est installé — rien d'autre.
 
 ---
 
