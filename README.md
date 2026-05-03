@@ -40,6 +40,8 @@ Dans ton Google Sheet : **Extensions → Apps Script**
 `Ctrl+S` dans l'éditeur, puis **rafraîchis** ton Google Sheet.  
 Le menu **📁 Sheet Folders** apparaît dans la barre de menu.
 
+https://github.com/user-attachments/assets/153a2849-82bc-49ae-864a-f2cfbdd42833
+
 ### 4. Autorisation requise
 
 Au premier lancement, Google affiche un avertissement de sécurité.  
@@ -51,6 +53,8 @@ C'est normal pour tout script non publié officiellement.
 
 Le script accède uniquement au fichier Google Sheets dans lequel  
 il est installé — rien d'autre.
+
+https://github.com/user-attachments/assets/eb4d1866-7708-435c-98f6-12c72ba09319
 
 ---
 
