@@ -16,7 +16,6 @@ Avec Sheet Folders, organise tes onglets Google Sheets en dossiers, avec navigat
 - **Masquer / afficher** un dossier entier ou feuille par feuille
 - **Renommer** un dossier
 - **Supprimer** un dossier avec choix : dissocier les feuilles ou les supprimer définitivement
-- **UI réactive** — la synchro serveur tourne en arrière-plan pour afficher les actions plus rapidement
 
 ---
 
@@ -80,7 +79,6 @@ Consulter l’[étude de cas](/docs/CASE_STUDY.md)
 ## A faire
 
 - Améliorer le code
-- Améliorer l'interface
 - Ajouter un gif pour montrer l'app
   
 ---
