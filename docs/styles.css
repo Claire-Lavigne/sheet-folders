@@ -195,6 +195,19 @@ nav {
   width: 100%; display: block;
   border-radius: 0 0 14px 14px;
 }
+.star-nudge {
+  display: inline-block;
+  margin-top: 20px;
+  font-size: 13px;
+  color: var(--text2);
+  text-decoration: none;
+  border: 1px solid var(--border2);
+  border-radius: 20px;
+  padding: 6px 16px;
+  transition: color .15s, border-color .15s;
+  animation: fadeUp .5s .35s ease both;
+}
+.star-nudge:hover { color: var(--text); border-color: var(--text2); }
 
 /* ── SECTION LABEL / TITLES (communs) ── */
 .section-label {
