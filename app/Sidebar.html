@@ -109,6 +109,7 @@ body {
   content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
   background: var(--folder-color, transparent);
   border-radius: var(--radius) 0 0 var(--radius);
+  box-shadow: var(--folder-color-shadow, none);
 }
 .folder-card:hover { box-shadow: 0 1px 4px rgba(0,0,0,.12); }
 .folder-card.hidden-folder { opacity: .5; }
@@ -615,7 +616,7 @@ function tplFolderCard(id, f) {
     : '<div class="sheet-pill-empty">Aucune feuille assignée</div>';
 
   return `<div class="folder-card ${isHidden ? 'hidden-folder' : ''}"
-    style="${f.color ? `--folder-color:${f.color}` : ''}"
+    style="${f.color ? `--folder-color:${f.color};${f.color.toLowerCase().replace(/\s/g,'') === '#ffffff' ? '--folder-color-shadow:inset -1px 0 0 rgba(0,0,0,.2)' : ''}` : ''}"
     data-folder-id="${id}">
     <div class="folder-header" onclick="toggleFolder('${id}')">
       <span class="folder-name" id="fname-${id}">${esc(f.name)}</span>
@@ -645,7 +646,7 @@ function tplAssignRow(s) {
   const dotHtml = !haFolder
     ? '<span style="width:8px;height:8px;flex-shrink:0;display:inline-block"></span>'
     : !folderColor
-      ? '<span style="width:8px;flex-shrink:0;display:inline-block;color:var(--border2);font-size:11px;line-height:1;font-weight:500">—</span>'
+      ? '<svg width="8" height="8" viewBox="0 0 8 8" style="flex-shrink:0"><circle cx="4" cy="4" r="3" fill="none" stroke="var(--border2)" stroke-width="1"/><line x1="1.5" y1="6.5" x2="6.5" y2="1.5" stroke="var(--border2)" stroke-width="1"/></svg>'
       : `<span style="width:8px;height:8px;border-radius:50%;background:${folderColor};border:1px solid rgba(0,0,0,.15);flex-shrink:0;display:inline-block"></span>`;
   const opts = Object.entries(folders)
     .map(([id, f]) => `<option value="${id}" ${assigned === id ? 'selected' : ''}>${esc(f.name)}</option>`)
