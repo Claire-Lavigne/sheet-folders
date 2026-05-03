@@ -4,7 +4,7 @@ Google Sheets ne propose pas de système de dossiers. Sur un fichier avec 20+ fe
 
 Avec Sheet Folders, organise tes onglets Google Sheets en dossiers, avec navigation, couleurs et contrôle de visibilité  — directement dans une sidebar.  
 
-![Sheet Folders preview](preview.gif)
+![Sheet Folders preview](/docs/preview.gif)
 
 ---
 
