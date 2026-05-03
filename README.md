@@ -1,21 +1,22 @@
 # 📁 Sheet Folders
 
-> Organise tes onglets Google Sheets en dossiers, avec navigation, couleurs et contrôle de visibilité.
+> Organise tes onglets Google Sheets en dossiers, avec navigation, couleurs et contrôle de visibilité  — directement dans une sidebar.
 
-Google Sheets ne propose pas de système de dossiers pour les onglets. Sur des fichiers complexes avec 20+ feuilles, retrouver ce qu'on cherche devient vite un problème. **Sheet Folders** résout ça avec une sidebar légère directement intégrée dans Sheets.
+Google Sheets ne propose pas de système de dossiers. Sur un fichier avec 20+ feuilles, retrouver ce qu'on cherche devient vite ingérable. 
 
-![Sheet Folders preview](preview.jpg)
+![Sheet Folders preview](preview.gif)
 
 ---
 
 ## Fonctionnalités
 
-- **Créer des dossiers** avec nom et couleur personnalisable
-- **Assigner des feuilles** à un dossier (la couleur de l'onglet se met à jour automatiquement)
+- **Créer des dossiers** avec nom et couleur personnalisable (la couleur de l'onglet se met à jour automatiquement)
+- **Assigner des feuilles** à un dossier
 - **Naviguer** directement vers une feuille depuis la sidebar
 - **Masquer / afficher** un dossier entier ou feuille par feuille
+- **Renommer** un dossier
 - **Supprimer** un dossier avec choix : dissocier les feuilles ou les supprimer définitivement
-- **UI réactive** — les actions sont instantanées (optimistic updates), la synchro serveur tourne en arrière-plan
+- **UI réactive** — la synchro serveur tourne en arrière-plan pour afficher les actions plus rapidement
 
 ---
 
@@ -51,24 +52,17 @@ Le menu **📁 Dossiers** apparaît dans la barre de menu.
 
 ---
 
-## Choix techniques notables
+## Méthode de développement
 
-**Optimistic UI** — chaque action met à jour l'état local immédiatement sans attendre le serveur. L'appel Apps Script tourne en arrière-plan. Résultat : zéro latence perçue pour l'utilisateur.
-
-**Un seul `getFullState()` au chargement** — après l'init, le client maintient son propre état en mémoire. Les fonctions serveur font chacune 1 read + 1 write sur `PropertiesService`, rien de plus.
-
-**Refresh ciblé** — l'onglet "Assigner" recharge uniquement la liste des feuilles (`getSheets()`) à chaque ouverture, pour détecter les nouvelles feuilles sans recharger toute la config.
+Ce projet a été implémenté avec Claude.ai (Anthropic) comme outil de génération de code.
+Mon rôle : identifier le problème, décrire précisément les fonctionnalités et l'UI souhaitées, tester le résultat, repérer les bugs et les comportements inattendus, puis diriger les correctifs et ajustements par itérations successives.
 
 ---
 
-## Limitations connues
+## A faire
 
-- Google Sheets exige au minimum une feuille visible — le script gère ce cas et refuse de tout masquer
-- On ne peut pas masquer la feuille active — le script bascule automatiquement sur une autre avant de masquer
-- Les dossiers sont liés au fichier (stockage `DocumentProperties`), pas à l'utilisateur
-
+- Améliorer le code
+- Améliorer l'interface
+- Ajouter un gif pour montrer l'app
+  
 ---
-
-## Auteur
-
-Claire — développeuse front-end
