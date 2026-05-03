@@ -21,6 +21,8 @@ Avec Sheet Folders, organise tes onglets Google Sheets en dossiers, avec navigat
 
 ## Installation
 
+> ⭐ Si cet outil t'est utile, une étoile sur le repo est la meilleure façon de me le faire savoir.
+
 ### 1. Ouvre l'éditeur Apps Script
 
 Dans ton Google Sheet : **Extensions → Apps Script**
@@ -67,12 +69,6 @@ il est installé — rien d'autre.
 
 Ce projet a été implémenté avec Claude.ai (Anthropic) comme outil de génération de code.
 Mon rôle : identifier le problème, décrire précisément les fonctionnalités et l'UI souhaitées, tester le résultat, repérer les bugs et les comportements inattendus, puis diriger les correctifs et ajustements par itérations successives.
-
----
-
-## Étude de cas
-
-Consulter l’[étude de cas](/docs/CASE_STUDY.md)
 
 ---
 
