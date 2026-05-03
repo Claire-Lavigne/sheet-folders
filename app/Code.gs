@@ -48,7 +48,7 @@ function getFullState() {
 function createFolder(name, color) {
   const data = getData();
   const id = 'f_' + Date.now();
-  data.folders[id] = { name, color: color || '#4A90D9' };
+  data.folders[id] = { name, color: color || '' };
   saveData(data);
   return id;
 }
@@ -68,7 +68,7 @@ function updateFolderColor(folderId, color) {
   for (const sheetName in data.assignments) {
     if (data.assignments[sheetName] === folderId) {
       const sheet = ss.getSheetByName(sheetName);
-      if (sheet) sheet.setTabColor(color);
+      if (sheet) sheet.setTabColor(color || null);
     }
   }
 }
@@ -129,7 +129,7 @@ function assignSheet(sheetName, folderId) {
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(sheetName);
   if (sheet) {
     const color = folderId && data.folders[folderId] ? data.folders[folderId].color : null;
-    sheet.setTabColor(color);
+    sheet.setTabColor(color || null);
   }
 }
 
