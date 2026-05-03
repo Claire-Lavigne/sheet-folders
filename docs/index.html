@@ -22,6 +22,7 @@
   --accent:  #6C8EF5;
   --accent2: #4A6FE0;
   --green:   #52C07A;
+  --warn:    #F5A623;
 }
 
 html { scroll-behavior: smooth; }
@@ -80,7 +81,6 @@ nav {
   position: relative; text-align: center;
 }
 
-/* Glow */
 .hero::after {
   content: '';
   position: absolute;
@@ -141,7 +141,7 @@ nav {
 }
 .btn-hero-ghost:hover { background: var(--surface); color: var(--text); }
 
-/* Preview window */
+/* ── PREVIEW ── */
 .hero-preview {
   margin-top: 60px; position: relative;
   animation: fadeUp .6s .4s ease both;
@@ -166,94 +166,21 @@ nav {
   font-size: 11px; color: var(--text3);
   font-family: 'JetBrains Mono', monospace;
 }
-.preview-body { display: flex; }
-.preview-sheet {
+.preview-body {
+  display: flex;
+  align-items: stretch;
+  min-height: 260px;
+}
+.preview-gif {
   flex: 1;
-  background: #fff;
-  height: 320px;
-  position: relative;
   display: flex; align-items: center; justify-content: center;
+  background: #fff;
+  overflow: hidden;
 }
-.preview-sheet-inner {
-  width: 90%; height: 85%;
-  display: grid; grid-template-columns: 80px repeat(4, 1fr);
-  grid-template-rows: 28px repeat(6, 1fr);
-  gap: 1px; background: #E8EBF0;
-  border: 1px solid #E8EBF0;
+.preview-gif img {
+  width: 100%; height: 100%;
+  object-fit: cover; display: block;
 }
-.cell {
-  background: #fff; font-size: 9px; color: #555;
-  display: flex; align-items: center; padding: 0 6px;
-}
-.cell.header { background: #F0F2F8; font-weight: 600; color: #333; }
-.cell.bold { font-weight: 600; color: #222; }
-.cell.num { color: #1A56DB; }
-.cell.green { color: #166534; background: #F0FDF4; }
-.cell.yellow { background: #FEFCE8; }
-
-/* Tabs at bottom */
-.preview-tabs {
-  position: absolute; bottom: 0; left: 0; right: 0;
-  display: flex; gap: 2px; padding: 0 8px;
-  background: #F0F2F5; border-top: 1px solid #DDE1E8;
-  height: 28px; align-items: center;
-}
-.tab-pill {
-  padding: 3px 10px; border-radius: 4px 4px 0 0;
-  font-size: 9px; font-weight: 500;
-  border: 1px solid transparent; border-bottom: none;
-  cursor: default; white-space: nowrap;
-}
-.tab-pill.active { background: #fff; border-color: #DDE1E8; color: #111; }
-.tab-pill.t1 { color: #fff; border-color: transparent; }
-.tab-pill.t2 { color: #fff; border-color: transparent; }
-.tab-pill.t3 { color: #fff; border-color: transparent; }
-.tab-pill.t4 { color: #fff; border-color: transparent; }
-.tab-pill.grey { background: #E8EBF0; color: #666; border-color: #DDE1E8; }
-
-/* Sidebar preview */
-.preview-sidebar {
-  width: 200px; flex-shrink: 0;
-  border-left: 1px solid var(--border);
-  background: var(--bg2);
-  padding: 12px 10px;
-}
-.ps-header {
-  display: flex; align-items: center; gap: 6px;
-  margin-bottom: 12px;
-}
-.ps-title { font-size: 12px; font-weight: 600; color: var(--text); }
-.ps-folder {
-  border-radius: 7px; overflow: hidden;
-  border: 1px solid var(--border);
-  margin-bottom: 6px;
-  position: relative;
-}
-.ps-folder::before {
-  content: '';
-  position: absolute; left: 0; top: 0; bottom: 0;
-  width: 3px; background: var(--fc, #6C8EF5);
-  border-radius: 7px 0 0 7px;
-}
-.ps-folder-header {
-  display: flex; align-items: center; gap: 6px;
-  padding: 7px 8px 7px 12px;
-  font-size: 11px; font-weight: 500; color: var(--text);
-}
-.ps-count {
-  margin-left: auto;
-  font-size: 9px; color: var(--text3);
-  font-family: 'JetBrains Mono', monospace;
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: 10px; padding: 1px 5px;
-}
-.ps-sheets { border-top: 1px solid var(--border); padding: 5px 8px 5px 12px; }
-.ps-sheet {
-  font-size: 10px; color: var(--text2);
-  padding: 3px 0; display: flex; align-items: center; gap: 4px;
-}
-.ps-dot-tiny { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
 
 /* ── FEATURES ── */
 .features {
@@ -276,7 +203,7 @@ nav {
 
 .features-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
   gap: 16px;
 }
 .feature-card {
@@ -286,7 +213,6 @@ nav {
   transition: border-color .2s, transform .2s;
 }
 .feature-card:hover { border-color: var(--border2); transform: translateY(-2px); }
-.feature-icon { font-size: 22px; margin-bottom: 12px; }
 .feature-title { font-size: 14px; font-weight: 600; margin-bottom: 6px; }
 .feature-desc { font-size: 13px; color: var(--text2); line-height: 1.6; }
 
@@ -299,7 +225,6 @@ nav {
 }
 .tech-inner { max-width: 900px; margin: 0 auto; }
 .tech-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 40px; }
-.tech-item { }
 .tech-item-label {
   font-size: 10px; font-weight: 500; letter-spacing: .08em;
   text-transform: uppercase; color: var(--text3);
@@ -308,20 +233,6 @@ nav {
 }
 .tech-item-value { font-size: 15px; font-weight: 500; color: var(--text); }
 .tech-item-desc { font-size: 13px; color: var(--text2); margin-top: 3px; line-height: 1.5; }
-
-.code-block {
-  background: var(--bg);
-  border: 1px solid var(--border2);
-  border-radius: 10px; padding: 20px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 12px; line-height: 1.7;
-  color: var(--text2); margin-top: 40px;
-  overflow-x: auto;
-}
-.code-comment { color: var(--text3); }
-.code-keyword { color: #C792EA; }
-.code-fn { color: var(--accent); }
-.code-string { color: var(--green); }
 
 /* ── INSTALL ── */
 .install-section { padding: 100px 40px; max-width: 900px; margin: 0 auto; }
@@ -341,6 +252,11 @@ nav {
   font-family: 'JetBrains Mono', monospace;
   margin-top: 2px;
 }
+.step-num.step-warn {
+  background: rgba(245,166,35,.1);
+  border-color: rgba(245,166,35,.2);
+  color: var(--warn);
+}
 .step-content { flex: 1; }
 .step-title { font-size: 15px; font-weight: 600; margin-bottom: 5px; }
 .step-desc { font-size: 13px; color: var(--text2); line-height: 1.6; }
@@ -350,6 +266,51 @@ nav {
   border-radius: 5px; padding: 3px 8px;
   font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--accent);
 }
+
+/* Bloc autorisation */
+.auth-steps {
+  margin-top: 10px;
+  display: flex; flex-direction: column; gap: 5px;
+}
+.auth-step {
+  display: flex; align-items: baseline; gap: 8px;
+  font-size: 13px; color: var(--text2);
+}
+.auth-step-num {
+  font-size: 10px; font-weight: 600;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--warn); flex-shrink: 0;
+}
+.auth-note {
+  margin-top: 10px;
+  font-size: 12px; color: var(--text3);
+  padding: 8px 12px;
+  background: rgba(245,166,35,.05);
+  border: 1px solid rgba(245,166,35,.15);
+  border-radius: 7px;
+  line-height: 1.5;
+}
+
+/* ── CREDITS / MÉTHODE ── */
+.credits-section {
+  padding: 80px 40px;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.credits-section > div { max-width: 900px; margin: 0 auto; }
+.credits-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 40px; margin-top: 40px;
+}
+.credits-item-label {
+  font-size: 10px; font-weight: 500; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--text3);
+  font-family: 'JetBrains Mono', monospace;
+  margin-bottom: 6px;
+}
+.credits-item-value { font-size: 15px; font-weight: 500; color: var(--text); }
+.credits-item-desc { font-size: 13px; color: var(--text2); margin-top: 3px; line-height: 1.5; }
 
 /* ── FOOTER ── */
 footer {
@@ -362,7 +323,6 @@ footer {
 .footer-links { display: flex; gap: 20px; }
 .footer-links a { font-size: 13px; color: var(--text2); text-decoration: none; transition: color .15s; }
 .footer-links a:hover { color: var(--text); }
-.footer-credit { font-size: 12px; color: var(--text3); }
 
 /* ── ANIMATIONS ── */
 @keyframes fadeUp {
@@ -407,7 +367,6 @@ footer {
     </a>
   </div>
 
-  <!-- Preview -->
   <div class="hero-preview">
     <div class="preview-window">
       <div class="preview-bar">
@@ -417,14 +376,20 @@ footer {
         <span class="preview-title">Mon Fichier de Suivi — Google Sheets</span>
       </div>
       <div class="preview-body">
-        <!-- Sheet -->
-        <img src="https://github.com/Claire-Lavigne/sheet-folders/blob/main/docs/preview.gif" />
+        <div class="preview-gif">
+          <img src="https://raw.githubusercontent.com/Claire-Lavigne/sheet-folders/main/docs/preview.gif" alt="Sheet Folders preview" />
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
 <!-- FEATURES -->
 <section class="features" id="features">
+  <div class="reveal">
+    <div class="section-label">Fonctionnalités</div>
+    <h2 class="section-title">Tout ce dont tu as besoin.<br>Rien de plus.</h2>
+  </div>
   <div class="features-grid reveal">
     <div class="feature-card">
       <div class="feature-title">Dossiers personnalisables</div>
@@ -495,7 +460,20 @@ footer {
       <div class="step-num">4</div>
       <div class="step-content">
         <div class="step-title">Sauvegarde et rafraîchis</div>
-        <div class="step-desc"><code class="step-code">Ctrl+S</code> dans l'éditeur, puis rafraîchis ton Google Sheet. Le menu <strong>📁 Dossiers</strong> apparaît dans la barre de menu.</div>
+        <div class="step-desc"><code class="step-code">Ctrl+S</code> dans l'éditeur, puis rafraîchis ton Google Sheet. Le menu <strong>📁 Sheet Folders</strong> apparaît dans la barre de menu.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num step-warn">!</div>
+      <div class="step-content">
+        <div class="step-title">Autorisation requise</div>
+        <div class="step-desc">Au premier lancement, Google affiche un avertissement de sécurité. C'est normal pour tout script non publié officiellement.</div>
+        <div class="auth-steps">
+          <div class="auth-step"><span class="auth-step-num">1 →</span> Clique sur <strong>Avancé</strong></div>
+          <div class="auth-step"><span class="auth-step-num">2 →</span> Clique sur <strong>Accéder à Sheet Folders (non sécurisé)</strong></div>
+          <div class="auth-step"><span class="auth-step-num">3 →</span> Accepte les permissions</div>
+        </div>
+        <div class="auth-note">Le script accède uniquement au fichier Google Sheets dans lequel il est installé — rien d'autre.</div>
       </div>
     </div>
   </div>
@@ -505,24 +483,26 @@ footer {
     </a>
   </div>
 </section>
-  
-<!-- CREDITS -->
+
+<!-- MÉTHODE -->
 <section class="credits-section" id="credits">
-  <div class="reveal">
-    <div class="section-label">Méthode</div>
-    <h2 class="section-title">Construit avec Claude.ai</h2>
-    <p class="section-sub">Ce projet n'a pas été codé à la main. Il a été implémenté avec Claude.ai (Anthropic), un outil de génération de code.</p>
-  </div>
- <div class="credits-grid reveal">
-    <div class="credits-item">
-      <div class="credits-item-label">Ce que j'ai fait</div>
-      <div class="credits-item-value">Concevoir et spécifier</div>
-      <div class="credits-item-desc">Identifier le problème, décrire précisément les fonctionnalités, les comportements attendus, les règles UI, les cas limites.</div>
+  <div>
+    <div class="reveal">
+      <div class="section-label">Méthode</div>
+      <h2 class="section-title">Construit avec Claude.ai</h2>
+      <p class="section-sub">Ce projet n'a pas été codé à la main. Il a été implémenté avec <a href="https://claude.ai" style="color:var(--accent);text-decoration:none" target="_blank">Claude.ai</a> (Anthropic), un outil de génération de code.</p>
     </div>
-    <div class="credits-item">
-      <div class="credits-item-label">Ce que j'ai fait</div>
-      <div class="credits-item-value">Tester et valider</div>
-      <div class="credits-item-desc">Tester dans Google Sheets, repérer les bugs et comportements incorrects, décrire les correctifs attendus, valider le résultat.</div>
+    <div class="credits-grid reveal">
+      <div class="credits-item">
+        <div class="credits-item-label">Ce que j'ai fait</div>
+        <div class="credits-item-value">Concevoir et spécifier</div>
+        <div class="credits-item-desc">Identifier le problème, décrire précisément les fonctionnalités, les comportements attendus, les règles UI, les cas limites.</div>
+      </div>
+      <div class="credits-item">
+        <div class="credits-item-label">Ce que j'ai fait</div>
+        <div class="credits-item-value">Tester et valider</div>
+        <div class="credits-item-desc">Tester dans Google Sheets, repérer les bugs et comportements incorrects, décrire les correctifs attendus, valider le résultat.</div>
+      </div>
     </div>
   </div>
 </section>
@@ -539,7 +519,6 @@ footer {
 </footer>
 
 <script>
-// Scroll reveal
 const observer = new IntersectionObserver(entries => {
   entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
 }, { threshold: 0.1 });
