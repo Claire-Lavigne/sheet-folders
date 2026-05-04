@@ -2,20 +2,16 @@
 
 Sheet Folders est une extension Google Sheets (Apps Script + HTML/CSS/JS vanilla) qui organise les onglets Google Sheets en dossiers — navigation, couleurs et visibilité directement dans une sidebar.  
 
-Google Sheets ne propose aucun outil pour organiser les feuilles. Sur 20+ onglets, retrouver ce qu'on cherche devient pénible. Sheet Folders comble ce manque.
-
 ![Sheet Folders preview](/docs/demo.mp4)
 
 ---
 
 ## Fonctionnalités
-
-- **Créer des dossiers** avec nom et couleur personnalisable (la couleur de l'onglet se met à jour automatiquement)
-- **Assigner des feuilles** à un dossier
-- **Naviguer** directement vers une feuille depuis la sidebar
-- **Masquer / afficher** un dossier entier ou feuille par feuille
-- **Renommer** un dossier
-- **Supprimer** un dossier avec choix : dissocier les feuilles ou les supprimer définitivement
+- **Dossiers** — créer avec nom et couleur, synchronisée automatiquement sur les onglets
+- **Assignation** — associer des feuilles à un dossier
+- **Navigation** — aller sur une feuille directement depuis la sidebar
+- **Visibilité** — masquer / afficher un dossier entier ou feuille par feuille
+- **Gestion** — renommer, supprimer — avec choix de dissocier les feuilles ou supprimer tout le dossier
 
 ---
 
