@@ -79,6 +79,6 @@ Mon rôle : identifier le problème, décrire précisément les fonctionnalités
 ## A faire
 
 - Améliorer le code
-- Ajouter un gif pour montrer l'app
+- Mettre demo.mp4 à jour
   
 ---
