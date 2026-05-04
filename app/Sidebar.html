@@ -80,6 +80,13 @@ body {
 .btn-sm { padding: 5px 10px; }
 .btn-full { width: 100%; justify-content: center; }
 
+/* Bouton renommer / annuler-renommage — couleur neutre sur base .btn */
+.rename-btn {
+  background: transparent; color: var(--text2);
+  border: 1px solid var(--border); padding: 0 10px;
+}
+.rename-btn:hover { background: var(--surface2); color: var(--text); border-color: var(--border2); }
+
 /* ── INPUT ── */
 .input {
   width: 100%; height: 28px; padding: 0 10px;
@@ -221,85 +228,7 @@ body {
   position: absolute; opacity: 0; width: 0; height: 0; pointer-events: none;
 }
 
-.rename-btn {
-  display: inline-flex; align-items: center;
-  height: 28px; padding: 0 10px; border-radius: var(--radius-sm);
-  font-size: 12px; font-weight: 500; line-height: 1;
-  font-family: 'Google Sans', 'Roboto', sans-serif;
-  cursor: pointer; background: transparent;
-  color: var(--text2); border: 1px solid var(--border);
-  transition: all .15s;
-}
-.rename-btn:hover { background: var(--surface2); color: var(--text); border-color: var(--border2); }
-
-.rename-confirm-btn {
-  display: inline-flex; align-items: center;
-  height: 28px; padding: 0 10px; border-radius: var(--radius-sm);
-  font-size: 12px; font-weight: 500; line-height: 1;
-  font-family: 'Google Sans', 'Roboto', sans-serif;
-  cursor: pointer; border: 1px solid var(--accent);
-  background: var(--accent); color: #fff;
-  transition: all .15s;
-}
-.rename-confirm-btn:hover { background: var(--accent2); }
-.rename-cancel-btn {
-  display: inline-flex; align-items: center;
-  height: 28px; padding: 0 10px; border-radius: var(--radius-sm);
-  font-size: 12px; font-weight: 500; line-height: 1;
-  font-family: 'Google Sans', 'Roboto', sans-serif;
-  cursor: pointer; background: transparent;
-  color: var(--text2); border: 1px solid var(--border);
-  transition: all .15s;
-}
-.rename-cancel-btn:hover { background: var(--surface2); border-color: var(--border2); }
-
-.delete-btn {
-  display: inline-flex; align-items: center;
-  height: 28px; padding: 0 10px; border-radius: var(--radius-sm);
-  font-size: 12px; font-weight: 500; line-height: 1;
-  font-family: 'Google Sans', 'Roboto', sans-serif;
-  cursor: pointer; background: transparent;
-  color: var(--danger); border: 1px solid rgba(217,48,37,.3);
-  transition: all .15s;
-}
-.delete-btn:hover { background: rgba(217,48,37,.06); }
-
-/* ── SHEET PILLS ── */
-.sheet-pill {
-  display: flex; align-items: center; gap: 6px;
-  padding: 5px 6px; border-radius: var(--radius-sm); margin-bottom: 2px;
-  font-size: 12px; transition: background .1s;
-}
-.sheet-pill:hover { background: var(--surface2); }
-.sheet-pill.sheet-hidden { opacity: .45; }
-
-.sheet-pill-name {
-  flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-  cursor: pointer; color: var(--text);
-  background: none; border: none; padding: 0; font: inherit; text-align: left;
-}
-.sheet-pill-name:hover { color: var(--accent); }
-
-.sheet-vis-btn {
-  padding: 1px 7px; border-radius: 20px;
-  font-size: 10px; font-weight: 500;
-  font-family: 'Google Sans', 'Roboto', sans-serif;
-  cursor: pointer; border: 1px solid var(--border);
-  background: var(--bg); color: var(--text2);
-  transition: all .15s; white-space: nowrap; flex-shrink: 0;
-}
-.sheet-vis-btn:hover { border-color: var(--accent); color: var(--accent); }
-
-.pill-remove {
-  background: none; border: none; cursor: pointer;
-  color: var(--text3); font-size: 16px; padding: 0 1px;
-  line-height: 1; flex-shrink: 0; transition: color .12s;
-}
-.pill-remove:hover { color: var(--danger); }
-
-.sheet-pill-empty { color: var(--text3); font-size: 11px; font-style: italic; padding: 4px; text-align: center; }
-
-/* ── RENAME INLINE ── */
+/* ── RENAME INPUT ── */
 .rename-input {
   border: none; background: transparent;
   font-family: 'Google Sans', 'Roboto', sans-serif;
@@ -348,6 +277,41 @@ body {
   outline: none; transition: border-color .15s;
 }
 .assign-select:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(26,115,232,.15); }
+
+/* ── SHEET PILLS ── */
+.sheet-pill {
+  display: flex; align-items: center; gap: 6px;
+  padding: 5px 6px; border-radius: var(--radius-sm); margin-bottom: 2px;
+  font-size: 12px; transition: background .1s;
+}
+.sheet-pill:hover { background: var(--surface2); }
+.sheet-pill.sheet-hidden { opacity: .45; }
+
+.sheet-pill-name {
+  flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  cursor: pointer; color: var(--text);
+  background: none; border: none; padding: 0; font: inherit; text-align: left;
+}
+.sheet-pill-name:hover { color: var(--accent); }
+
+.sheet-vis-btn {
+  padding: 1px 7px; border-radius: 20px;
+  font-size: 10px; font-weight: 500;
+  font-family: 'Google Sans', 'Roboto', sans-serif;
+  cursor: pointer; border: 1px solid var(--border);
+  background: var(--bg); color: var(--text2);
+  transition: all .15s; white-space: nowrap; flex-shrink: 0;
+}
+.sheet-vis-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+.pill-remove {
+  background: none; border: none; cursor: pointer;
+  color: var(--text3); font-size: 16px; padding: 0 1px;
+  line-height: 1; flex-shrink: 0; transition: color .12s;
+}
+.pill-remove:hover { color: var(--danger); }
+
+.sheet-pill-empty { color: var(--text3); font-size: 11px; font-style: italic; padding: 4px; text-align: center; }
 
 /* ── DELETE CONFIRM ── */
 .delete-confirm {
@@ -454,10 +418,7 @@ let hiddenSheets  = new Set();
 // UTILITAIRES
 // ═══════════════════════════════════════════
 
-const esc = str =>
-  String(str)
-    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
 const showToast = (msg, type) => {
   const t   = document.getElementById('toast');
@@ -479,6 +440,9 @@ const showToast = (msg, type) => {
 const folderSheets = id =>
   state.sheets.filter(s => state.data.assignments[s.name] === id);
 
+// Nombre de feuilles visibles (partagé entre toggleSheetVis / toggleFolderVis)
+const visibleCount = () => state.sheets.filter(s => !hiddenSheets.has(s.name)).length;
+
 // Recalcule si un dossier est entièrement caché
 const syncFolderHidden = id => {
   const sheets    = folderSheets(id);
@@ -489,17 +453,16 @@ const syncFolderHidden = id => {
 
 // Applique la visibilité d'une feuille + resync son dossier
 const setSheetHidden = (name, hidden) => {
-  if (hidden) hiddenSheets.add(name);
-  else        hiddenSheets.delete(name);
-  Object.keys(state.data.folders).forEach(id => syncFolderHidden(id));
+  hiddenSheets[hidden ? 'add' : 'delete'](name);
+  for (const id in state.data.folders) syncFolderHidden(id);
 };
 
 // Synchronise l'état caché depuis les données serveur
 const syncHiddenFromServer = () => {
   hiddenSheets.clear();
   hiddenFolders.clear();
-  state.sheets.forEach(s => { if (s.hidden) hiddenSheets.add(s.name); });
-  Object.keys(state.data.folders).forEach(id => syncFolderHidden(id));
+  state.sheets.forEach(s => s.hidden && hiddenSheets.add(s.name));
+  for (const id in state.data.folders) syncFolderHidden(id);
 };
 
 
@@ -550,17 +513,18 @@ const tplColorRow = (color, id) => {
 
 const tplFolderActions = (id, f) =>
   `<div class="folder-actions">
-    <button class="rename-btn" onclick="startRename('${id}')">Renommer</button>
+    <button class="btn rename-btn" onclick="startRename('${id}')">Renommer</button>
     ${tplColorRow(f.color, id)}
-    <button class="delete-btn" onclick="doDelete('${id}')">Supprimer</button>
+    <button class="btn btn-danger-soft" onclick="doDelete('${id}')">Supprimer</button>
   </div>`;
 
 const tplSheet = s => {
+  const n      = esc(s.name);
   const hidden = hiddenSheets.has(s.name);
   return `<div class="sheet-pill ${hidden ? 'sheet-hidden' : ''}">
-    <button class="sheet-pill-name" type="button" onclick="navTo('${esc(s.name)}')" title="${esc(s.name)}">${esc(s.name)}</button>
-    <button class="sheet-vis-btn" onclick="toggleSheetVis('${esc(s.name)}',${hidden})">${hidden ? 'Afficher' : 'Masquer'}</button>
-    <button class="pill-remove" onclick="unassign('${esc(s.name)}')" title="Retirer du dossier" aria-label="Retirer ${esc(s.name)} du dossier">×</button>
+    <button class="sheet-pill-name" type="button" onclick="navTo('${n}')" title="${n}">${n}</button>
+    <button class="sheet-vis-btn" onclick="toggleSheetVis('${n}',${hidden})">${hidden ? 'Afficher' : 'Masquer'}</button>
+    <button class="pill-remove" onclick="unassign('${n}')" title="Retirer du dossier" aria-label="Retirer ${n} du dossier">×</button>
   </div>`;
 };
 
@@ -604,8 +568,9 @@ const tplFolderCard = (id, f) => {
 
 const tplAssignRow = s => {
   const { folders, assignments } = state.data;
-  const assigned  = assignments[s.name];
-  const hasFolder = assigned && folders[assigned];
+  const n          = esc(s.name);
+  const assigned   = assignments[s.name];
+  const hasFolder  = assigned && folders[assigned];
   const folderColor = hasFolder ? folders[assigned].color : null;
   const dotHtml = !hasFolder
     ? '<span style="width:8px;height:8px;flex-shrink:0;display:inline-block" aria-hidden="true"></span>'
@@ -617,8 +582,8 @@ const tplAssignRow = s => {
     .join('');
   return `<div class="assign-sheet">
     ${dotHtml}
-    <span class="assign-name" title="${esc(s.name)}">${esc(s.name)}</span>
-    <select class="assign-select" aria-label="Dossier pour ${esc(s.name)}" onchange="assignTo('${esc(s.name)}',this.value)">
+    <span class="assign-name" title="${n}">${n}</span>
+    <select class="assign-select" aria-label="Dossier pour ${n}" onchange="assignTo('${n}',this.value)">
       <option value="">— Aucun —</option>${opts}
     </select>
   </div>`;
@@ -661,21 +626,21 @@ function toggleFolder(id) {
 
 function switchTab(tab) {
   currentTab = tab;
-  document.getElementById('view-folders').style.display = tab === 'folders' ? '' : 'none';
-  document.getElementById('view-assign').style.display  = tab === 'assign'  ? '' : 'none';
-  document.getElementById('tab-folders').classList.toggle('active', tab === 'folders');
-  document.getElementById('tab-assign').classList.toggle('active',  tab === 'assign');
-  document.getElementById('tab-folders').setAttribute('aria-selected', tab === 'folders');
-  document.getElementById('tab-assign').setAttribute('aria-selected',  tab === 'assign');
-  if (tab === 'assign') {
+  const isFolders = tab === 'folders';
+  document.getElementById('view-folders').style.display = isFolders ? '' : 'none';
+  document.getElementById('view-assign').style.display  = isFolders ? 'none' : '';
+  ['folders', 'assign'].forEach(t => {
+    const btn = document.getElementById('tab-' + t);
+    btn.classList.toggle('active', t === tab);
+    btn.setAttribute('aria-selected', t === tab);
+  });
+  if (!isFolders) {
     document.getElementById('assign-list').innerHTML = '<div class="loader"></div>';
     google.script.run
       .withSuccessHandler(sheets => { state.sheets = sheets; render(); })
       .withFailureHandler(() => render())
       .getSheets();
-  } else {
-    render();
-  }
+  } else render();
 }
 
 
@@ -684,80 +649,51 @@ function switchTab(tab) {
 // ═══════════════════════════════════════════
 
 function toggleSheetVis(name, wasHidden) {
-  const makeVisible = wasHidden;
-  if (!makeVisible) {
-    const visibleCount = state.sheets.filter(s => !hiddenSheets.has(s.name)).length;
-    if (visibleCount <= 1) { showToast('Au moins une feuille doit rester visible', 'warn'); return; }
-  }
-  setSheetHidden(name, !makeVisible);
+  if (!wasHidden && visibleCount() <= 1) { showToast('Au moins une feuille doit rester visible', 'warn'); return; }
+  setSheetHidden(name, !wasHidden);
   render();
-  showToast(makeVisible ? 'Feuille affichée' : 'Feuille masquée');
-  if (makeVisible) google.script.run.withFailureHandler(() => showToast('⚠ Erreur', 'err')).showSheetByName(name);
-  else             google.script.run.withFailureHandler(() => showToast('⚠ Erreur', 'err')).hideSheetByName(name);
+  showToast(wasHidden ? 'Feuille affichée' : 'Feuille masquée');
+  google.script.run.withFailureHandler(() => showToast('⚠ Erreur', 'err')).setSheetVisible(name, wasHidden);
 }
 
 function toggleFolderVis(id, wasHidden) {
-  const makeVisible = wasHidden;
   const sheets = folderSheets(id);
-  if (!makeVisible) {
-    const visibleCount = state.sheets.filter(s => !hiddenSheets.has(s.name)).length;
-    const wouldHide    = sheets.filter(s => !hiddenSheets.has(s.name)).length;
-    if (wouldHide >= visibleCount) { showToast('Au moins une feuille doit rester visible', 'warn'); return; }
+  if (!wasHidden) {
+    const wouldHide = sheets.filter(s => !hiddenSheets.has(s.name)).length;
+    if (wouldHide >= visibleCount()) { showToast('Au moins une feuille doit rester visible', 'warn'); return; }
   }
-  sheets.forEach(s => setSheetHidden(s.name, !makeVisible));
-  if (makeVisible) hiddenFolders.delete(id); else hiddenFolders.add(id);
+  sheets.forEach(s => setSheetHidden(s.name, !wasHidden));
+  hiddenFolders[wasHidden ? 'delete' : 'add'](id);
   render();
-  showToast(makeVisible ? 'Dossier affiché' : 'Dossier masqué');
-  google.script.run.withFailureHandler(() => showToast('⚠ Erreur', 'err')).toggleFolderVisibility(id, makeVisible);
+  showToast(wasHidden ? 'Dossier affiché' : 'Dossier masqué');
+  google.script.run.withFailureHandler(() => showToast('⚠ Erreur', 'err')).toggleFolderVisibility(id, wasHidden);
 }
-
-
 
 
 // ═══════════════════════════════════════════
 // COULEUR — PICKER NATIF
 // ═══════════════════════════════════════════
 
-// Met à jour la color-row d'un dossier existant en temps réel
-function handleColorChange(id, hex) {
-  const dot = document.getElementById('color-dot-' + id);
-  const row = document.getElementById('color-row-' + id);
+// Met à jour l'UI du picker (dot + row) selon la couleur (vide = effacer)
+const _colorUI = (dotId, rowId, hex) => {
+  const dot = document.getElementById(dotId);
+  const row = document.getElementById(rowId);
   if (!dot) return;
-  dot.className        = 'color-dot';
-  dot.style.background = hex;
-  row?.classList.add('has-color');
-  changeColor(id, hex);
-}
+  dot.className        = hex ? 'color-dot' : 'color-dot no-color';
+  dot.style.background = hex || '';
+  row?.classList.toggle('has-color', !!hex);
+};
 
-function handleColorClear(id) {
-  const dot = document.getElementById('color-dot-' + id);
-  const row = document.getElementById('color-row-' + id);
-  if (!dot) return;
-  dot.className        = 'color-dot no-color';
-  dot.style.background = '';
-  row?.classList.remove('has-color');
-  changeColor(id, '');
-}
+// Dossier existant
+const handleColorChange = (id, hex) => { _colorUI('color-dot-' + id, 'color-row-' + id, hex); changeColor(id, hex); };
+const handleColorClear  = id => { _colorUI('color-dot-' + id, 'color-row-' + id, ''); changeColor(id, ''); };
 
-// Nouveau dossier — picker natif change
-function handleNewColorChange(hex) {
-  const dot = document.getElementById('new-color-dot');
-  const row = document.getElementById('new-color-row');
-  dot.className        = 'color-dot';
-  dot.style.background = hex;
-  row.classList.add('has-color');
-}
-
-function handleNewColorClear() {
-  const dot = document.getElementById('new-color-dot');
-  const row = document.getElementById('new-color-row');
-  dot.className        = 'color-dot no-color';
-  dot.style.background = '';
-  row.classList.remove('has-color');
+// Nouveau dossier
+const handleNewColorChange = hex => _colorUI('new-color-dot', 'new-color-row', hex);
+const handleNewColorClear  = () => {
+  _colorUI('new-color-dot', 'new-color-row', '');
   document.getElementById('new-color-input').value = '#1a73e8';
-}
-
-const resetNewColor = () => handleNewColorClear();
+};
 
 const getNewColor = () => {
   const input = document.getElementById('new-color-input');
@@ -773,7 +709,7 @@ const getNewColor = () => {
 function openNewFolderForm() {
   document.getElementById('new-folder-form').classList.add('open');
   document.getElementById('btn-add-folder').style.display = 'none';
-  resetNewColor();
+  handleNewColorClear();
   setTimeout(() => document.getElementById('new-name').focus(), 80);
 }
 
@@ -781,7 +717,7 @@ function cancelNewFolder() {
   document.getElementById('new-folder-form').classList.remove('open');
   document.getElementById('btn-add-folder').style.display = '';
   document.getElementById('new-name').value = '';
-  resetNewColor();
+  handleNewColorClear();
 }
 
 function confirmNewFolder() {
@@ -828,8 +764,8 @@ function startRename(id) {
   span.querySelector('input').focus();
   const actions = document.querySelector(`[data-folder-id="${id}"] .folder-actions`);
   actions.innerHTML = `
-    <button class="rename-confirm-btn" onclick="commitRename('${id}')">✓ Valider</button>
-    <button class="rename-cancel-btn"  onclick="cancelRename('${id}','${esc(cur)}')">✕ Annuler</button>`;
+    <button class="btn btn-primary" onclick="commitRename('${id}')">✓ Valider</button>
+    <button class="btn rename-btn"  onclick="cancelRename('${id}','${esc(cur)}')">✕ Annuler</button>`;
 }
 
 function commitRename(id) {
@@ -864,7 +800,6 @@ const changeColor = (id, color) => {
 // SUPPRESSION
 // ═══════════════════════════════════════════
 
-
 function doDelete(id) {
   document.querySelectorAll('.delete-confirm').forEach(el => el.remove());
   const card  = document.querySelector(`[data-folder-id="${id}"]`);
@@ -884,7 +819,7 @@ function doDelete(id) {
       <button class="btn btn-danger-soft" onclick="confirmDeleteAll('${id}')">Tout supprimer</button>
       <button class="btn btn-ghost"       onclick="this.closest('.delete-confirm').remove()">Annuler</button>
     </div>`;
-  card.appendChild(panel);
+  card.querySelector('.folder-actions').after(panel);
 }
 
 function confirmDissociate(id, toastMsg) {
@@ -909,7 +844,7 @@ const showInlineConfirm = (card, message, onConfirm) => {
       <button type="button" class="btn btn-danger-soft" id="ic-ok">Confirmer</button>
       <button type="button" class="btn btn-ghost"       id="ic-cancel">Annuler</button>
     </div>`;
-  card.appendChild(panel);
+  card.querySelector('.folder-actions').after(panel);
   panel.querySelector('#ic-ok').onclick     = () => { panel.remove(); onConfirm(); };
   panel.querySelector('#ic-cancel').onclick = () => panel.remove();
 };
@@ -920,7 +855,7 @@ function confirmDeleteAll(id) {
   const names     = sheets.map(s => s.name);
   const remaining = state.sheets.filter(s => !names.includes(s.name));
 
-  if (remaining.length === 0) {
+  if (!remaining.length) {
     showToast('Impossible : au moins une feuille doit rester', 'warn');
     return;
   }
@@ -966,7 +901,7 @@ function unassign(sheetName) {
 // NAVIGATION
 // ═══════════════════════════════════════════
 
-function navTo(name) { google.script.run.goToSheet(name); showToast('→ ' + name); }
+const navTo = name => { google.script.run.goToSheet(name); showToast('→ ' + name); };
 
 
 // ═══════════════════════════════════════════
