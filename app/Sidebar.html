@@ -169,14 +169,15 @@ body {
 .folder-actions { display: flex; gap: 6px; margin-bottom: 8px; flex-wrap: wrap; align-items: center; }
 
 .color-dot {
-  width: 12px; height: 12px; flex-shrink: 0;
-  border-radius: 3px; border: 1px solid rgba(0,0,0,.15);
+  width: 30px; height: 28px; flex-shrink: 0;
+  border-radius: 3px 0 0 3px;
+  border: 1px solid rgba(0, 0, 0, .15);
   position: relative; overflow: hidden;
 }
-.color-dot.no-color { background: #fff; }
+.color-dot.no-color { background: #fff; border-radius: 3px; }
 .color-dot.no-color::after {
   content: '';
-  position: absolute; top: 50%; left: -2px; right: -2px;
+  position: absolute; top: 50%; left: 0; right: 0;
   height: 1.5px; background: #d93025;
   transform: translateY(-50%) rotate(-45deg);
 }
@@ -185,6 +186,7 @@ body {
   display: inline-flex;
   align-items: stretch;
   height: 28px;
+  border: none;
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   background: var(--surface2);
@@ -206,10 +208,10 @@ body {
 
 .color-nocolor-btn {
   display: none; align-items: center;
-  padding: 0 10px;
-  background: none; border: none; border-left: 1px solid var(--border);
+  padding: 0 8px;
+  background: none; border: none;
   border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-  cursor: pointer; font-size: 14px; line-height: 1; color: var(--text3);
+  cursor: pointer; font-size: 18px; line-height: 1; color: var(--text3);
   transition: color .15s, background .15s;
   flex-shrink: 0;
 }
