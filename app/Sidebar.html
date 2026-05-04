@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
 <meta charset="UTF-8">
 <style>
@@ -60,8 +60,9 @@ body {
 /* ── BUTTONS ── */
 .btn {
   display: inline-flex; align-items: center; gap: 4px;
-  padding: 6px 12px; border-radius: var(--radius-sm);
-  font-size: 12px; font-weight: 500; font-family: 'Google Sans', 'Roboto', sans-serif;
+  height: 28px; padding: 0 12px; border-radius: var(--radius-sm);
+  font-size: 12px; font-weight: 500; line-height: 1;
+  font-family: 'Google Sans', 'Roboto', sans-serif;
   cursor: pointer; transition: all .15s; border: none;
   letter-spacing: 0.01em;
 }
@@ -81,10 +82,10 @@ body {
 
 /* ── INPUT ── */
 .input {
-  width: 100%; padding: 7px 10px;
+  width: 100%; height: 28px; padding: 0 10px;
   background: var(--surface); border: 1px solid var(--border);
   border-radius: var(--radius-sm); font-family: 'Roboto', sans-serif;
-  font-size: 12px; color: var(--text); outline: none;
+  font-size: 12px; line-height: 1; color: var(--text); outline: none;
   transition: border-color .15s, box-shadow .15s;
 }
 .input::placeholder { color: var(--text3); }
@@ -118,7 +119,12 @@ body {
 .folder-header {
   display: flex; align-items: center; gap: 6px;
   padding: 8px 10px 8px 14px;
-  cursor: pointer; user-select: none;
+}
+.folder-toggle {
+  flex: 1; min-width: 0;
+  display: flex; align-items: center; gap: 6px;
+  background: none; border: none; padding: 0;
+  cursor: pointer; color: inherit; text-align: left;
 }
 .folder-name {
   flex: 1; font-weight: 500; font-size: 13px;
@@ -162,141 +168,62 @@ body {
 
 .folder-actions { display: flex; gap: 6px; margin-bottom: 8px; flex-wrap: wrap; align-items: center; }
 
-.color-swatch {
-  width: 26px; height: 26px;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border);
-  cursor: pointer; flex-shrink: 0;
+.color-dot {
+  width: 12px; height: 12px; flex-shrink: 0;
+  border-radius: 3px; border: 1px solid rgba(0,0,0,.15);
   position: relative; overflow: hidden;
-  transition: border-color .15s, box-shadow .15s;
 }
-.color-swatch:hover { border-color: var(--border2); box-shadow: 0 0 0 2px rgba(0,0,0,.08); }
-.color-swatch.no-color { background: #fff; }
-.color-swatch.no-color::after {
+.color-dot.no-color { background: #fff; }
+.color-dot.no-color::after {
   content: '';
   position: absolute; top: 50%; left: -2px; right: -2px;
   height: 1.5px; background: #d93025;
   transform: translateY(-50%) rotate(-45deg);
 }
 
-/* ── CUSTOM COLOR PICKER ── */
-.cpicker {
-  position: fixed;
-  background: #fff;
+.color-row {
+  display: inline-flex;
+  align-items: stretch;
+  height: 28px;
   border: 1px solid var(--border);
-  border-radius: var(--radius);
-  box-shadow: 0 4px 16px rgba(0,0,0,.15);
-  padding: 10px;
-  z-index: 999;
-  width: 220px;
-  display: none;
-}
-.cpicker.open { display: block; }
-
-/* Aucune couleur */
-.cpicker-nocolor {
-  display: flex; align-items: center; gap: 7px;
-  padding: 5px 6px; border-radius: var(--radius-sm);
-  cursor: pointer; font-size: 12px; color: var(--text2);
-  transition: background .1s;
-  margin-bottom: 10px;
-  border: 1px solid var(--border);
-}
-.cpicker-nocolor:hover { background: var(--surface2); color: var(--text); }
-.cpicker-nocolor-swatch {
-  width: 18px; height: 18px;
-  border-radius: 3px; border: 1px solid var(--border);
-  background: #fff; position: relative; overflow: hidden; flex-shrink: 0;
-}
-.cpicker-nocolor-swatch::after {
-  content: '';
-  position: absolute; top: 50%; left: -2px; right: -2px;
-  height: 1.5px; background: #d93025;
-  transform: translateY(-50%) rotate(-45deg);
-}
-
-/* Gradient SL */
-.cpicker-sl {
-  width: 100%; height: 120px;
   border-radius: var(--radius-sm);
-  position: relative; cursor: crosshair;
-  margin-bottom: 8px; overflow: hidden;
-  border: 1px solid var(--border);
-}
-.cpicker-sl-white {
-  position: absolute; inset: 0;
-  background: linear-gradient(to right, #fff, transparent);
-}
-.cpicker-sl-black {
-  position: absolute; inset: 0;
-  background: linear-gradient(to bottom, transparent, #000);
-}
-.cpicker-sl-cursor {
-  position: absolute;
-  width: 12px; height: 12px;
-  border-radius: 50%;
-  border: 2px solid #fff;
-  box-shadow: 0 0 0 1px rgba(0,0,0,.3);
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-}
-
-/* Sliders */
-.cpicker-hue {
-  width: 100%; height: 12px;
-  border-radius: 6px; cursor: pointer;
-  margin-bottom: 8px;
-  background: linear-gradient(to right,
-    hsl(0,100%,50%), hsl(30,100%,50%), hsl(60,100%,50%), hsl(90,100%,50%),
-    hsl(120,100%,50%), hsl(150,100%,50%), hsl(180,100%,50%), hsl(210,100%,50%),
-    hsl(240,100%,50%), hsl(270,100%,50%), hsl(300,100%,50%), hsl(330,100%,50%),
-    hsl(360,100%,50%));
-  -webkit-appearance: none; appearance: none; border: none; outline: none;
-}
-.cpicker-hue::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  width: 14px; height: 14px;
-  border-radius: 50%; border: 2px solid #fff;
-  box-shadow: 0 0 0 1px rgba(0,0,0,.3);
-  cursor: pointer; background: transparent;
-}
-
-/* Hex input */
-.cpicker-hex-row {
-  display: flex; align-items: center; gap: 6px;
-}
-.cpicker-preview {
-  width: 24px; height: 24px; flex-shrink: 0;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border);
-}
-.cpicker-hex {
-  flex: 0 0 72px;
-  width: 72px;
-  padding: 4px 6px;
-  border: 1px solid var(--border); border-radius: var(--radius-sm);
-  font-family: 'Roboto Mono', monospace; font-size: 11px;
-  color: var(--text); outline: none;
+  background: var(--surface2);
   transition: border-color .15s;
 }
-.cpicker-hex:focus { border-color: var(--accent); }
-.cpicker-apply {
-  padding: 4px 10px; border-radius: var(--radius-sm);
-  background: var(--accent); color: #fff; border: none;
-  font-size: 11px; font-weight: 500; cursor: pointer;
-  font-family: 'Google Sans', sans-serif;
+.color-row:focus-within,
+.color-row:hover { border-color: var(--border2); }
+
+.color-pick-btn {
+  display: inline-flex; align-items: center;
+  padding: 0 10px;
+  background: none; border: none;
+  border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+  cursor: pointer;
   transition: background .15s;
 }
-.cpicker-apply:hover { background: var(--accent2); }
+.color-pick-btn:hover { background: rgba(0,0,0,.04); }
+.color-row:not(.has-color) .color-pick-btn { border-radius: var(--radius-sm); }
 
-.color-input-hidden {
+.color-nocolor-btn {
+  display: none; align-items: center;
+  padding: 0 10px;
+  background: none; border: none; border-left: 1px solid var(--border);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  cursor: pointer; font-size: 14px; line-height: 1; color: var(--text3);
+  transition: color .15s, background .15s;
+  flex-shrink: 0;
+}
+.color-nocolor-btn:hover { color: var(--danger); background: rgba(217,48,37,.06); }
+.color-row.has-color .color-nocolor-btn { display: inline-flex; }
+
+.color-input-native {
   position: absolute; opacity: 0; width: 0; height: 0; pointer-events: none;
 }
 
 .rename-btn {
   display: inline-flex; align-items: center;
-  padding: 4px 10px; border-radius: var(--radius-sm);
-  font-size: 12px; font-weight: 500;
+  height: 28px; padding: 0 10px; border-radius: var(--radius-sm);
+  font-size: 12px; font-weight: 500; line-height: 1;
   font-family: 'Google Sans', 'Roboto', sans-serif;
   cursor: pointer; background: transparent;
   color: var(--text2); border: 1px solid var(--border);
@@ -306,8 +233,8 @@ body {
 
 .rename-confirm-btn {
   display: inline-flex; align-items: center;
-  padding: 4px 10px; border-radius: var(--radius-sm);
-  font-size: 12px; font-weight: 500;
+  height: 28px; padding: 0 10px; border-radius: var(--radius-sm);
+  font-size: 12px; font-weight: 500; line-height: 1;
   font-family: 'Google Sans', 'Roboto', sans-serif;
   cursor: pointer; border: 1px solid var(--accent);
   background: var(--accent); color: #fff;
@@ -316,8 +243,8 @@ body {
 .rename-confirm-btn:hover { background: var(--accent2); }
 .rename-cancel-btn {
   display: inline-flex; align-items: center;
-  padding: 4px 10px; border-radius: var(--radius-sm);
-  font-size: 12px; font-weight: 500;
+  height: 28px; padding: 0 10px; border-radius: var(--radius-sm);
+  font-size: 12px; font-weight: 500; line-height: 1;
   font-family: 'Google Sans', 'Roboto', sans-serif;
   cursor: pointer; background: transparent;
   color: var(--text2); border: 1px solid var(--border);
@@ -327,8 +254,8 @@ body {
 
 .delete-btn {
   display: inline-flex; align-items: center;
-  padding: 4px 10px; border-radius: var(--radius-sm);
-  font-size: 12px; font-weight: 500;
+  height: 28px; padding: 0 10px; border-radius: var(--radius-sm);
+  font-size: 12px; font-weight: 500; line-height: 1;
   font-family: 'Google Sans', 'Roboto', sans-serif;
   cursor: pointer; background: transparent;
   color: var(--danger); border: 1px solid rgba(217,48,37,.3);
@@ -348,6 +275,7 @@ body {
 .sheet-pill-name {
   flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   cursor: pointer; color: var(--text);
+  background: none; border: none; padding: 0; font: inherit; text-align: left;
 }
 .sheet-pill-name:hover { color: var(--accent); }
 
@@ -461,19 +389,28 @@ body {
 </head>
 <body>
 
-<div class="tabs">
-  <button class="tab active" id="tab-folders" onclick="switchTab('folders')">Dossiers</button>
-  <button class="tab" id="tab-assign" onclick="switchTab('assign')">Assigner</button>
+<div class="tabs" role="tablist" aria-label="Navigation">
+  <button class="tab active" id="tab-folders" role="tab" aria-selected="true"  aria-controls="view-folders" onclick="switchTab('folders')">Dossiers</button>
+  <button class="tab"        id="tab-assign"  role="tab" aria-selected="false" aria-controls="view-assign"  onclick="switchTab('assign')">Assigner</button>
 </div>
 
-<div id="view-folders">
+<div id="view-folders" role="tabpanel" aria-labelledby="tab-folders">
   <div class="new-folder-form" id="new-folder-form">
     <div class="form-row">
-      <div class="color-swatch no-color" id="new-swatch" onclick="openCpicker(event,'new')" title="Choisir une couleur"></div>
+      <div class="color-row" id="new-color-row">
+        <button type="button" class="color-pick-btn" id="new-color-btn"
+          onclick="document.getElementById('new-color-input').click()"
+          aria-label="Choisir une couleur">
+          <span class="color-dot no-color" id="new-color-dot"></span>
+        </button>
+        <button type="button" class="color-nocolor-btn" onclick="handleNewColorClear()" aria-label="Supprimer la couleur" title="Supprimer la couleur">×</button>
+        <input type="color" id="new-color-input" class="color-input-native" value="#1a73e8"
+          onchange="handleNewColorChange(this.value)">
+      </div>
       <input class="input" id="new-name" placeholder="Nom du dossier…"
         onkeydown="if(event.key==='Enter') confirmNewFolder()">
-      <button class="btn btn-primary btn-sm" onclick="confirmNewFolder()">Créer</button>
-      <button class="btn btn-ghost btn-sm" onclick="cancelNewFolder()">✕</button>
+      <button class="btn btn-primary" onclick="confirmNewFolder()">Créer</button>
+      <button class="btn btn-ghost"   onclick="cancelNewFolder()" aria-label="Annuler">✕</button>
     </div>
   </div>
   <button class="add-folder-btn" id="btn-add-folder" onclick="openNewFolderForm()">
@@ -483,7 +420,7 @@ body {
   <div id="folder-list"><div class="loader"></div></div>
 </div>
 
-<div id="view-assign" style="display:none">
+<div id="view-assign" style="display:none" role="tabpanel" aria-labelledby="tab-assign">
   <div style="padding:8px 0 10px">
     <p style="font-size:11px;color:var(--text3);line-height:1.6">
       Associe chaque feuille à un dossier.<br>
@@ -493,35 +430,9 @@ body {
   <div id="assign-list"><div class="loader"></div></div>
 </div>
 
-<div class="toast hidden" id="toast">
+<div class="toast hidden" id="toast" role="status" aria-live="polite">
   <span class="toast-dot" id="toast-dot"></span>
   <span id="toast-msg"></span>
-</div>
-
-<!-- Custom color picker panel -->
-<div class="cpicker" id="cpicker" onclick="event.stopPropagation()">
-  <div class="cpicker-nocolor" onclick="cpickNoColor()">
-    <div class="cpicker-nocolor-swatch"></div>
-    Aucune couleur
-  </div>
-  <!-- Gradient SL -->
-  <div class="cpicker-sl" id="cpicker-sl">
-    <div style="position:absolute;inset:0;border-radius:3px" id="cpicker-sl-bg"></div>
-    <div class="cpicker-sl-white"></div>
-    <div class="cpicker-sl-black"></div>
-    <div class="cpicker-sl-cursor" id="cpicker-cursor"></div>
-  </div>
-  <!-- Hue slider -->
-  <input type="range" class="cpicker-hue" id="cpicker-hue" min="0" max="360" value="221"
-    oninput="cpickerOnHue(this.value)">
-  <!-- Hex + preview + apply -->
-  <div class="cpicker-hex-row">
-    <div class="cpicker-preview" id="cpicker-preview"></div>
-    <input type="text" class="cpicker-hex" id="cpicker-hex" maxlength="7" placeholder="#000000"
-      oninput="cpickerOnHex(this.value)"
-      onkeydown="if(event.key==='Enter') cpickerApply()">
-    <button class="cpicker-apply" onclick="cpickerApply()">OK</button>
-  </div>
 </div>
 
 <script>
@@ -530,103 +441,154 @@ body {
 // ÉTAT
 // ═══════════════════════════════════════════
 
-let state       = { data: { folders: {}, assignments: {} }, sheets: [] };
-let currentTab  = 'folders';
-let openFolders = new Set();
+let state         = { data: { folders: {}, assignments: {} }, sheets: [] };
+let currentTab    = 'folders';
+let openFolders   = new Set();
 let hiddenFolders = new Set();
 let hiddenSheets  = new Set();
 
+
+// ═══════════════════════════════════════════
+// UTILITAIRES
+// ═══════════════════════════════════════════
+
+const esc = str =>
+  String(str)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+
+const showToast = (msg, type) => {
+  const t   = document.getElementById('toast');
+  const dot = document.getElementById('toast-dot');
+  document.getElementById('toast-msg').textContent = msg;
+  dot.style.background = type === 'err' ? '#d93025' : type === 'warn' ? '#e37400' : '#188038';
+  t.classList.remove('hidden');
+  t.style.animation = 'none'; void t.offsetWidth; t.style.animation = 'toastIn .2s ease';
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.add('hidden'), 2400);
+};
+
+
+// ═══════════════════════════════════════════
+// ÉTAT — HELPERS
+// ═══════════════════════════════════════════
+
+// Retourne les feuilles assignées à un dossier
+const folderSheets = id =>
+  state.sheets.filter(s => state.data.assignments[s.name] === id);
+
+// Recalcule si un dossier est entièrement caché
+const syncFolderHidden = id => {
+  const sheets    = folderSheets(id);
+  const allHidden = sheets.length > 0 && sheets.every(s => hiddenSheets.has(s.name));
+  if (allHidden) hiddenFolders.add(id);
+  else           hiddenFolders.delete(id);
+};
+
+// Applique la visibilité d'une feuille + resync son dossier
+const setSheetHidden = (name, hidden) => {
+  if (hidden) hiddenSheets.add(name);
+  else        hiddenSheets.delete(name);
+  Object.keys(state.data.folders).forEach(id => syncFolderHidden(id));
+};
+
 // Synchronise l'état caché depuis les données serveur
-function syncHiddenFromServer() {
+const syncHiddenFromServer = () => {
   hiddenSheets.clear();
   hiddenFolders.clear();
   state.sheets.forEach(s => { if (s.hidden) hiddenSheets.add(s.name); });
   Object.keys(state.data.folders).forEach(id => syncFolderHidden(id));
-}
+};
 
-// Recalcule si un dossier est entièrement caché
-function syncFolderHidden(id) {
-  const sheets = folderSheets(id);
-  if (sheets.length > 0 && sheets.every(s => hiddenSheets.has(s.name))) {
-    hiddenFolders.add(id);
-  } else {
-    hiddenFolders.delete(id);
-  }
-}
 
-// Applique la visibilité d'une feuille + resync son dossier
-function setSheetHidden(name, hidden) {
-  if (hidden) hiddenSheets.add(name);
-  else        hiddenSheets.delete(name);
-  // Resync tous les dossiers affectés
-  Object.keys(state.data.folders).forEach(id => syncFolderHidden(id));
-}
+// ═══════════════════════════════════════════
+// OPTIMISTIC UI
+// ═══════════════════════════════════════════
 
-// Retourne les feuilles assignées à un dossier
-function folderSheets(id) {
-  return state.sheets.filter(s => state.data.assignments[s.name] === id);
-}
+const optimistic = (localUpdate, serverFn, ...args) => {
+  localUpdate();
+  render();
+  google.script.run
+    .withFailureHandler(() => showToast('⚠ Erreur serveur', 'err'))
+    [serverFn](...args);
+};
 
 
 // ═══════════════════════════════════════════
 // TEMPLATES HTML
 // ═══════════════════════════════════════════
 
-const ICON_FOLDER = `<svg width="32" height="32" viewBox="0 0 24 24" fill="#bdc1c6"><path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>`;
-const ICON_CHEVRON = `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>`;
+const ICON_FOLDER  = `<svg width="32" height="32" viewBox="0 0 24 24" fill="#bdc1c6" aria-hidden="true"><path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>`;
+const ICON_CHEVRON = `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>`;
 
-function tplEmpty() {
-  return `<div class="empty-state">
+const tplEmpty = () => `
+  <div class="empty-state">
     <div class="empty-icon">${ICON_FOLDER}</div>
     <div class="empty-title">Aucun dossier</div>
     <div class="empty-sub">Crée ton premier dossier<br>pour organiser tes feuilles.</div>
   </div>`;
-}
 
-function tplSwatch(color, id) {
-  return `<div class="color-swatch ${color ? 'has-color' : 'no-color'}"
-    style="${color ? `background:${color}` : ''}"
-    onclick="openCpicker(event,'${id}')"
-    title="Choisir une couleur"></div>`;
-}
+const tplColorRow = (color, id) => {
+  const dotClass = color ? '' : 'no-color';
+  const dotStyle = color ? `background:${color}` : '';
+  return `<div class="color-row ${color ? 'has-color' : ''}" id="color-row-${id}">
+    <button type="button" class="color-pick-btn" id="color-btn-${id}"
+      onclick="document.getElementById('color-input-${id}').click()"
+      aria-label="Choisir une couleur">
+      <span class="color-dot ${dotClass}" id="color-dot-${id}" style="${dotStyle}"></span>
+    </button>
+    <button type="button" class="color-nocolor-btn"
+      onclick="handleColorClear('${id}')"
+      aria-label="Supprimer la couleur" title="Supprimer la couleur">×</button>
+    <input type="color" id="color-input-${id}" class="color-input-native"
+      value="${color || '#1a73e8'}"
+      onchange="handleColorChange('${id}',this.value)">
+  </div>`;
+};
 
-function tplFolderActions(id, f) {
-  return `<div class="folder-actions">
+const tplFolderActions = (id, f) =>
+  `<div class="folder-actions">
     <button class="rename-btn" onclick="startRename('${id}')">Renommer</button>
-    ${tplSwatch(f.color, id)}
+    ${tplColorRow(f.color, id)}
     <button class="delete-btn" onclick="doDelete('${id}')">Supprimer</button>
   </div>`;
-}
 
-function tplSheet(s) {
+const tplSheet = s => {
   const hidden = hiddenSheets.has(s.name);
   return `<div class="sheet-pill ${hidden ? 'sheet-hidden' : ''}">
-    <span class="sheet-pill-name" onclick="navTo('${esc(s.name)}')" title="${esc(s.name)}">${esc(s.name)}</span>
+    <button class="sheet-pill-name" type="button" onclick="navTo('${esc(s.name)}')" title="${esc(s.name)}">${esc(s.name)}</button>
     <button class="sheet-vis-btn" onclick="toggleSheetVis('${esc(s.name)}',${hidden})">${hidden ? 'Afficher' : 'Masquer'}</button>
-    <button class="pill-remove" onclick="unassign('${esc(s.name)}')" title="Retirer du dossier">×</button>
+    <button class="pill-remove" onclick="unassign('${esc(s.name)}')" title="Retirer du dossier" aria-label="Retirer ${esc(s.name)} du dossier">×</button>
   </div>`;
-}
+};
 
-function tplFolderCard(id, f) {
-  const sheets  = folderSheets(id);
-  const isOpen  = openFolders.has(id);
+const tplFolderCard = (id, f) => {
+  const sheets   = folderSheets(id);
+  const isOpen   = openFolders.has(id);
   const isHidden = hiddenFolders.has(id);
   const sheetsHtml = sheets.length
     ? sheets.map(tplSheet).join('')
     : '<div class="sheet-pill-empty">Aucune feuille assignée</div>';
+  const isWhite  = f.color?.toLowerCase().replace(/\s/g, '') === '#ffffff';
+  const cardStyle = f.color
+    ? `--folder-color:${f.color};${isWhite ? '--folder-color-shadow:inset -1px 0 0 rgba(0,0,0,.2)' : ''}`
+    : '';
 
   return `<div class="folder-card ${isHidden ? 'hidden-folder' : ''}"
-    style="${f.color ? `--folder-color:${f.color};${f.color.toLowerCase().replace(/\s/g,'') === '#ffffff' ? '--folder-color-shadow:inset -1px 0 0 rgba(0,0,0,.2)' : ''}` : ''}"
+    style="${cardStyle}"
     data-folder-id="${id}">
-    <div class="folder-header" onclick="toggleFolder('${id}')">
-      <span class="folder-name" id="fname-${id}">${esc(f.name)}</span>
+    <div class="folder-header">
+      <button class="folder-toggle" type="button" aria-expanded="${isOpen}" onclick="toggleFolder('${id}')">
+        <span class="folder-name" id="fname-${id}">${esc(f.name)}</span>
+        <span class="folder-chevron ${isOpen ? 'open' : ''}" aria-hidden="true">${ICON_CHEVRON}</span>
+      </button>
       <span class="folder-meta">
-        <span class="folder-count">${sheets.length}</span>
-        <button class="vis-btn ${isHidden ? 'is-hidden' : ''}"
-          onclick="event.stopPropagation();toggleFolderVis('${id}',${isHidden})">
+        <span class="folder-count" aria-label="${sheets.length} feuille${sheets.length !== 1 ? 's' : ''}">${sheets.length}</span>
+        <button class="vis-btn ${isHidden ? 'is-hidden' : ''}" type="button"
+          aria-label="${isHidden ? 'Afficher' : 'Masquer'} le dossier ${esc(f.name)}"
+          onclick="toggleFolderVis('${id}',${isHidden})">
           ${isHidden ? 'Afficher' : 'Masquer'}
         </button>
-        <span class="folder-chevron ${isOpen ? 'open' : ''}">${ICON_CHEVRON}</span>
       </span>
     </div>
     <div class="folder-body ${isOpen ? 'open' : ''}">
@@ -636,54 +598,54 @@ function tplFolderCard(id, f) {
       </div>
     </div>
   </div>`;
-}
+};
 
-function tplAssignRow(s) {
+const tplAssignRow = s => {
   const { folders, assignments } = state.data;
-  const assigned = assignments[s.name];
-  const haFolder  = assigned && folders[assigned];
-  const folderColor = haFolder ? folders[assigned].color : null;
-  const dotHtml = !haFolder
-    ? '<span style="width:8px;height:8px;flex-shrink:0;display:inline-block"></span>'
+  const assigned  = assignments[s.name];
+  const hasFolder = assigned && folders[assigned];
+  const folderColor = hasFolder ? folders[assigned].color : null;
+  const dotHtml = !hasFolder
+    ? '<span style="width:8px;height:8px;flex-shrink:0;display:inline-block" aria-hidden="true"></span>'
     : !folderColor
-      ? '<svg width="8" height="8" viewBox="0 0 8 8" style="flex-shrink:0"><circle cx="4" cy="4" r="3" fill="none" stroke="var(--border2)" stroke-width="1"/><line x1="1.5" y1="6.5" x2="6.5" y2="1.5" stroke="var(--border2)" stroke-width="1"/></svg>'
-      : `<span style="width:8px;height:8px;border-radius:50%;background:${folderColor};border:1px solid rgba(0,0,0,.15);flex-shrink:0;display:inline-block"></span>`;
+      ? '<svg width="8" height="8" viewBox="0 0 8 8" style="flex-shrink:0" aria-hidden="true"><circle cx="4" cy="4" r="3" fill="none" stroke="var(--border2)" stroke-width="1"/><line x1="1.5" y1="6.5" x2="6.5" y2="1.5" stroke="var(--border2)" stroke-width="1"/></svg>'
+      : `<span style="width:8px;height:8px;border-radius:50%;background:${folderColor};border:1px solid rgba(0,0,0,.15);flex-shrink:0;display:inline-block" aria-hidden="true"></span>`;
   const opts = Object.entries(folders)
     .map(([id, f]) => `<option value="${id}" ${assigned === id ? 'selected' : ''}>${esc(f.name)}</option>`)
     .join('');
   return `<div class="assign-sheet">
     ${dotHtml}
     <span class="assign-name" title="${esc(s.name)}">${esc(s.name)}</span>
-    <select class="assign-select" onchange="assignTo('${esc(s.name)}',this.value)">
+    <select class="assign-select" aria-label="Dossier pour ${esc(s.name)}" onchange="assignTo('${esc(s.name)}',this.value)">
       <option value="">— Aucun —</option>${opts}
     </select>
   </div>`;
-}
+};
 
 
 // ═══════════════════════════════════════════
 // RENDU
 // ═══════════════════════════════════════════
 
-function render() {
-  if (currentTab === 'folders') renderFolders();
-  else renderAssign();
-}
-
-function renderFolders() {
-  const list = document.getElementById('folder-list');
+const renderFolders = () => {
+  const list    = document.getElementById('folder-list');
   const folders = state.data.folders;
   list.innerHTML = Object.keys(folders).length
     ? Object.entries(folders).map(([id, f]) => tplFolderCard(id, f)).join('')
     : tplEmpty();
-}
+};
 
-function renderAssign() {
+const renderAssign = () => {
   const list = document.getElementById('assign-list');
   list.innerHTML = state.sheets.length
     ? `<div>${state.sheets.map(tplAssignRow).join('')}</div>`
     : `<div class="empty-state"><div class="empty-icon">📄</div><div class="empty-title">Aucune feuille</div></div>`;
-}
+};
+
+const render = () => {
+  if (currentTab === 'folders') renderFolders();
+  else renderAssign();
+};
 
 function toggleFolder(id) {
   openFolders.has(id) ? openFolders.delete(id) : openFolders.add(id);
@@ -700,7 +662,9 @@ function switchTab(tab) {
   document.getElementById('view-folders').style.display = tab === 'folders' ? '' : 'none';
   document.getElementById('view-assign').style.display  = tab === 'assign'  ? '' : 'none';
   document.getElementById('tab-folders').classList.toggle('active', tab === 'folders');
-  document.getElementById('tab-assign').classList.toggle('active', tab === 'assign');
+  document.getElementById('tab-assign').classList.toggle('active',  tab === 'assign');
+  document.getElementById('tab-folders').setAttribute('aria-selected', tab === 'folders');
+  document.getElementById('tab-assign').setAttribute('aria-selected',  tab === 'assign');
   if (tab === 'assign') {
     document.getElementById('assign-list').innerHTML = '<div class="loader"></div>';
     google.script.run
@@ -746,130 +710,58 @@ function toggleFolderVis(id, wasHidden) {
 }
 
 
-// ═══════════════════════════════════════════
-// OPTIMISTIC UI
-// ═══════════════════════════════════════════
-
-function optimistic(localUpdate, serverFn, ...args) {
-  localUpdate();
-  render();
-  google.script.run
-    .withFailureHandler(() => showToast('⚠ Erreur serveur', 'err'))
-    [serverFn](...args);
-}
 
 
 // ═══════════════════════════════════════════
-// COLOR PICKER CUSTOM
+// COULEUR — PICKER NATIF
 // ═══════════════════════════════════════════
 
-let cpickerTarget = null;
-let cpickerH = 221, cpickerS = 72, cpickerL = 68;
-
-function hslToHex(h, s, l) {
-  s /= 100; l /= 100;
-  const a = s * Math.min(l, 1 - l);
-  const f = n => { const k = (n + h / 30) % 12; const c = l - a * Math.max(-1, Math.min(k - 3, 9 - k, 1)); return Math.round(255 * c).toString(16).padStart(2, '0'); };
-  return '#' + f(0) + f(8) + f(4);
+// Met à jour la color-row d'un dossier existant en temps réel
+function handleColorChange(id, hex) {
+  const dot = document.getElementById('color-dot-' + id);
+  const row = document.getElementById('color-row-' + id);
+  if (!dot) return;
+  dot.className        = 'color-dot';
+  dot.style.background = hex;
+  row?.classList.add('has-color');
+  changeColor(id, hex);
 }
 
-function hexToHsl(hex) {
-  let r = parseInt(hex.slice(1,3),16)/255, g = parseInt(hex.slice(3,5),16)/255, b = parseInt(hex.slice(5,7),16)/255;
-  const max = Math.max(r,g,b), min = Math.min(r,g,b), d = max - min;
-  let h = 0, s = 0, l = (max + min) / 2;
-  if (d) { s = d / (1 - Math.abs(2*l - 1)); h = max===r ? ((g-b)/d+6)%6 : max===g ? (b-r)/d+2 : (r-g)/d+4; h *= 60; }
-  return [Math.round(h), Math.round(s*100), Math.round(l*100)];
+function handleColorClear(id) {
+  const dot = document.getElementById('color-dot-' + id);
+  const row = document.getElementById('color-row-' + id);
+  if (!dot) return;
+  dot.className        = 'color-dot no-color';
+  dot.style.background = '';
+  row?.classList.remove('has-color');
+  changeColor(id, '');
 }
 
-function cpickerUpdateUI() {
-  const hex = hslToHex(cpickerH, cpickerS, cpickerL);
-  document.getElementById('cpicker-sl-bg').style.background = `hsl(${cpickerH},100%,50%)`;
-  const y = Math.min(100, Math.max(0, 100 - cpickerL * (1 + cpickerS / 100)));
-  const cursor = document.getElementById('cpicker-cursor');
-  cursor.style.left = cpickerS + '%';
-  cursor.style.top  = y + '%';
-  cursor.style.background = hex;
-  document.getElementById('cpicker-hue').value = cpickerH;
-  document.getElementById('cpicker-preview').style.background = hex;
-  document.getElementById('cpicker-hex').value = hex;
+// Nouveau dossier — picker natif change
+function handleNewColorChange(hex) {
+  const dot = document.getElementById('new-color-dot');
+  const row = document.getElementById('new-color-row');
+  dot.className        = 'color-dot';
+  dot.style.background = hex;
+  row.classList.add('has-color');
 }
 
-function cpickerOnHue(h)  { cpickerH = Number(h); cpickerUpdateUI(); }
-
-function cpickerOnSL(e) {
-  const rect = document.getElementById('cpicker-sl').getBoundingClientRect();
-  const x = Math.min(1, Math.max(0, (e.clientX - rect.left) / rect.width));
-  const y = Math.min(1, Math.max(0, (e.clientY - rect.top)  / rect.height));
-  cpickerS = Math.round(x * 100);
-  cpickerL = Math.round((1 - y) * (100 - cpickerS / 2));
-  cpickerUpdateUI();
+function handleNewColorClear() {
+  const dot = document.getElementById('new-color-dot');
+  const row = document.getElementById('new-color-row');
+  dot.className        = 'color-dot no-color';
+  dot.style.background = '';
+  row.classList.remove('has-color');
+  document.getElementById('new-color-input').value = '#1a73e8';
 }
 
-function cpickerOnHex(val) {
-  if (!/^#[0-9a-fA-F]{6}$/.test(val)) return;
-  [cpickerH, cpickerS, cpickerL] = hexToHsl(val);
-  document.getElementById('cpicker-sl-bg').style.background = `hsl(${cpickerH},100%,50%)`;
-  document.getElementById('cpicker-hue').value = cpickerH;
-  document.getElementById('cpicker-preview').style.background = val;
-  const y = Math.min(100, Math.max(0, 100 - cpickerL * (1 + cpickerS / 100)));
-  const cursor = document.getElementById('cpicker-cursor');
-  cursor.style.left = cpickerS + '%';
-  cursor.style.top  = y + '%';
-  cursor.style.background = val;
-}
+const resetNewColor = () => handleNewColorClear();
 
-function cpickerApply() {
-  const hex = document.getElementById('cpicker-hex').value;
-  if (/^#[0-9a-fA-F]{6}$/.test(hex)) { applyCpickColor(hex); closeCpicker(); }
-}
-
-function openCpicker(e, id) {
-  e.stopPropagation();
-  cpickerTarget = id;
-  const current = id === 'new'
-    ? (document.getElementById('new-swatch').dataset.color || '#1a73e8')
-    : (state.data.folders[id]?.color || '#1a73e8');
-  ;[cpickerH, cpickerS, cpickerL] = hexToHsl(current.startsWith('#') ? current : '#1a73e8');
-  cpickerUpdateUI();
-  const picker = document.getElementById('cpicker');
-  const rect   = e.currentTarget.getBoundingClientRect();
-  picker.style.top  = (rect.bottom + 4) + 'px';
-  picker.style.left = Math.min(rect.left, window.innerWidth - 230) + 'px';
-  picker.classList.add('open');
-  document.getElementById('cpicker-sl').onmousedown = ev => {
-    cpickerOnSL(ev);
-    const move = mv => cpickerOnSL(mv);
-    const up   = ()  => { document.removeEventListener('mousemove', move); document.removeEventListener('mouseup', up); };
-    document.addEventListener('mousemove', move);
-    document.addEventListener('mouseup', up);
-  };
-}
-
-function closeCpicker()    { document.getElementById('cpicker').classList.remove('open'); cpickerTarget = null; }
-function cpickNoColor()    { applyCpickColor(''); closeCpicker(); }
-
-function applyCpickColor(color) {
-  if (!cpickerTarget) return;
-  if (cpickerTarget === 'new') {
-    const swatch = document.getElementById('new-swatch');
-    if (color) {
-      swatch.className = 'color-swatch has-color';
-      swatch.style.background = color;
-      swatch.dataset.color = color;  // stocke le hex brut, pas le rgb() converti
-    } else {
-      swatch.className = 'color-swatch no-color';
-      swatch.style.background = '';
-      swatch.dataset.color = '';
-    }
-  } else {
-    changeColor(cpickerTarget, color);
-  }
-}
-
-document.addEventListener('click', e => {
-  const picker = document.getElementById('cpicker');
-  if (picker.classList.contains('open') && !picker.contains(e.target)) closeCpicker();
-});
+const getNewColor = () => {
+  const input = document.getElementById('new-color-input');
+  const row   = document.getElementById('new-color-row');
+  return row?.classList.contains('has-color') ? (input?.value || '') : '';
+};
 
 
 // ═══════════════════════════════════════════
@@ -879,7 +771,7 @@ document.addEventListener('click', e => {
 function openNewFolderForm() {
   document.getElementById('new-folder-form').classList.add('open');
   document.getElementById('btn-add-folder').style.display = 'none';
-  resetNewSwatch();
+  resetNewColor();
   setTimeout(() => document.getElementById('new-name').focus(), 80);
 }
 
@@ -887,21 +779,13 @@ function cancelNewFolder() {
   document.getElementById('new-folder-form').classList.remove('open');
   document.getElementById('btn-add-folder').style.display = '';
   document.getElementById('new-name').value = '';
-  resetNewSwatch();
-  closeCpicker();
-}
-
-function resetNewSwatch() {
-  const swatch = document.getElementById('new-swatch');
-  swatch.className = 'color-swatch no-color';
-  swatch.style.background = '';
+  resetNewColor();
 }
 
 function confirmNewFolder() {
-  const name = document.getElementById('new-name').value.trim();
+  const name  = document.getElementById('new-name').value.trim();
   if (!name) { showToast('Donne un nom au dossier', 'warn'); return; }
-  const swatch = document.getElementById('new-swatch');
-  const color  = swatch.classList.contains('has-color') ? (swatch.dataset.color || '') : '';
+  const color  = getNewColor();
   const tempId = 'f_temp_' + Date.now();
 
   state.data.folders[tempId] = { name, color };
@@ -958,33 +842,34 @@ function cancelRename(id, original) {
   if (actions) actions.innerHTML = tplFolderActions(id, state.data.folders[id] || {});
 }
 
-function doRename(id, val) {
+const doRename = (id, val) => {
   val = val.trim();
   if (!val || val === state.data.folders[id]?.name) { render(); return; }
   optimistic(() => { state.data.folders[id].name = val; showToast('Renommé'); }, 'renameFolder', id, val);
-}
+};
 
 
 // ═══════════════════════════════════════════
-// COULEUR
+// COULEUR — SERVEUR
 // ═══════════════════════════════════════════
 
-function changeColor(id, color) {
+const changeColor = (id, color) => {
   optimistic(() => { state.data.folders[id].color = color; }, 'updateFolderColor', id, color);
-}
+};
 
 
 // ═══════════════════════════════════════════
 // SUPPRESSION
 // ═══════════════════════════════════════════
 
+
 function doDelete(id) {
   document.querySelectorAll('.delete-confirm').forEach(el => el.remove());
   const card  = document.querySelector(`[data-folder-id="${id}"]`);
   if (!card) return;
   const count = folderSheets(id).length;
-  // Dossier vide → suppression directe
-  if (count === 0) { confirmDissociate(id); return; }
+  // Dossier vide → suppression directe sans confirmation
+  if (count === 0) { confirmDissociate(id, 'Dossier vide supprimé'); return; }
   const name  = state.data.folders[id]?.name || '';
   const panel = document.createElement('div');
   panel.className = 'delete-confirm';
@@ -994,36 +879,64 @@ function doDelete(id) {
     </div>
     <div class="delete-confirm-actions">
       <button class="btn btn-warn-soft"   onclick="confirmDissociate('${id}')">Dissocier les feuilles</button>
-      <button class="btn btn-danger-soft" onclick="confirmDeleteAll('${id}')">Supprimer les feuilles</button>
+      <button class="btn btn-danger-soft" onclick="confirmDeleteAll('${id}')">Tout supprimer</button>
       <button class="btn btn-ghost"       onclick="this.closest('.delete-confirm').remove()">Annuler</button>
     </div>`;
   card.appendChild(panel);
 }
 
-function confirmDissociate(id) {
+function confirmDissociate(id, toastMsg) {
+  const msg = toastMsg || 'Dossier supprimé, feuilles conservées';
   optimistic(() => {
     delete state.data.folders[id];
     for (const s in state.data.assignments)
       if (state.data.assignments[s] === id) delete state.data.assignments[s];
     hiddenFolders.delete(id);
-    showToast('Dossier supprimé, feuilles conservées');
+    showToast(msg);
   }, 'deleteFolder', id);
 }
 
+// Panel de confirmation inline — remplace confirm() natif
+const showInlineConfirm = (card, message, onConfirm) => {
+  document.querySelectorAll('.delete-confirm').forEach(el => el.remove());
+  const panel = document.createElement('div');
+  panel.className = 'delete-confirm';
+  panel.innerHTML = `
+    <div class="delete-confirm-msg">${message}</div>
+    <div class="delete-confirm-actions">
+      <button type="button" class="btn btn-danger-soft" id="ic-ok">Confirmer</button>
+      <button type="button" class="btn btn-ghost"       id="ic-cancel">Annuler</button>
+    </div>`;
+  card.appendChild(panel);
+  panel.querySelector('#ic-ok').onclick     = () => { panel.remove(); onConfirm(); };
+  panel.querySelector('#ic-cancel').onclick = () => panel.remove();
+};
+
 function confirmDeleteAll(id) {
-  const name   = state.data.folders[id]?.name || '';
-  const sheets = folderSheets(id);
-  if (!confirm(`Supprimer définitivement "${name}" et ses ${sheets.length} feuille(s) ?\nCette action est irréversible.`)) return;
-  optimistic(() => {
-    const names = sheets.map(s => s.name);
-    state.sheets = state.sheets.filter(s => !names.includes(s.name));
-    delete state.data.folders[id];
-    for (const s in state.data.assignments)
-      if (state.data.assignments[s] === id) delete state.data.assignments[s];
-    hiddenFolders.delete(id);
-    names.forEach(n => hiddenSheets.delete(n));
-    showToast('Dossier et feuilles supprimés');
-  }, 'deleteFolderAndSheets', id);
+  const name      = state.data.folders[id]?.name || '';
+  const sheets    = folderSheets(id);
+  const names     = sheets.map(s => s.name);
+  const remaining = state.sheets.filter(s => !names.includes(s.name));
+
+  if (remaining.length === 0) {
+    showToast('Impossible : au moins une feuille doit rester', 'warn');
+    return;
+  }
+
+  const card = document.querySelector(`[data-folder-id="${id}"]`);
+  showInlineConfirm(
+    card,
+    `Supprimer définitivement <strong>${esc(name)}</strong> et ses <strong>${sheets.length} feuille${sheets.length > 1 ? 's' : ''}</strong> ? Cette action est irréversible.`,
+    () => optimistic(() => {
+      state.sheets = remaining;
+      delete state.data.folders[id];
+      for (const s in state.data.assignments)
+        if (state.data.assignments[s] === id) delete state.data.assignments[s];
+      hiddenFolders.delete(id);
+      names.forEach(n => hiddenSheets.delete(n));
+      showToast('Dossier et feuilles supprimés');
+    }, 'deleteFolderAndSheets', id)
+  );
 }
 
 
@@ -1048,39 +961,22 @@ function unassign(sheetName) {
 
 
 // ═══════════════════════════════════════════
-// NAVIGATION & UTILITAIRES
+// NAVIGATION
 // ═══════════════════════════════════════════
 
 function navTo(name) { google.script.run.goToSheet(name); showToast('→ ' + name); }
-
-function showToast(msg, type) {
-  const t   = document.getElementById('toast');
-  const dot = document.getElementById('toast-dot');
-  document.getElementById('toast-msg').textContent = msg;
-  dot.style.background = type === 'err' ? '#d93025' : type === 'warn' ? '#e37400' : '#188038';
-  t.classList.remove('hidden');
-  t.style.animation = 'none'; void t.offsetWidth; t.style.animation = 'toastIn .2s ease';
-  clearTimeout(t._timer);
-  t._timer = setTimeout(() => t.classList.add('hidden'), 2400);
-}
-
-function esc(str) {
-  return String(str)
-    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-}
 
 
 // ═══════════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════════
 
-function init() {
+const init = () => {
   google.script.run
     .withSuccessHandler(s => { state = s; syncHiddenFromServer(); render(); })
     .withFailureHandler(() => showToast('Erreur chargement', 'err'))
     .getFullState();
-}
+};
 
 init();
 </script>
