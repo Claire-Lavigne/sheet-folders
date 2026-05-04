@@ -169,15 +169,15 @@ body {
 .folder-actions { display: flex; gap: 6px; margin-bottom: 8px; flex-wrap: wrap; align-items: center; }
 
 .color-dot {
-  width: 30px; height: 28px; flex-shrink: 0;
+  width: 28px; height: 28px; flex-shrink: 0;
   border-radius: 3px 0 0 3px;
   border: 1px solid rgba(0, 0, 0, .15);
   position: relative; overflow: hidden;
 }
-.color-dot.no-color { background: #fff; border-radius: 3px; }
+.color-dot.no-color { background: #fff; border-radius: 3px; border: none; height: 26px; }
 .color-dot.no-color::after {
   content: '';
-  position: absolute; top: 50%; left: 0; right: 0;
+  position: absolute; top: 50%; left: 2px; right: 2px;
   height: 1.5px; background: #d93025;
   transform: translateY(-50%) rotate(-45deg);
 }
@@ -197,7 +197,7 @@ body {
 
 .color-pick-btn {
   display: inline-flex; align-items: center;
-  padding: 0 10px;
+  padding: 0;
   background: none; border: none;
   border-radius: var(--radius-sm) 0 0 var(--radius-sm);
   cursor: pointer;
