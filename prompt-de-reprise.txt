@@ -8,7 +8,7 @@ Fichiers actuels (à uploader):
 - `docs/index.html` + `docs/styles.css` — page GitHub Pages
 - `docs/CASE_STUDY.md` — notes de projet
 - `docs/README.md` — intro au projet
-- `CLAUDE.md` + `Agents.md` — architecture, conventions, règles (à lire en premier) 
+- `CLAUDE.md` + `Agents.md` + `SKILL.md` — architecture, conventions, règles (à lire en premier) 
 
 Tâche de cette session : 
 Réduire la quantité de code tout en améliorant les performances et vitesse d'exécution, sans modifier les fonctionnalités existantes.
