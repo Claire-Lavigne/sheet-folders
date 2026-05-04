@@ -36,10 +36,6 @@ optimistic(localUpdate, serverFn, ...args)
 // 3. google.script.run[serverFn](...args) — sync arrière-plan
 ```
 
-**Couleurs**
-- Toujours stocker dans `dataset.color` — jamais lire `style.background` (retourne `rgb()`)
-- Passer `null` à `setTabColor()` si pas de couleur — une chaîne vide applique du bleu par défaut
-
 ## Conventions Code.gs
 
 - `getData()` / `saveData(data)` — seuls points d'accès à `PropertiesService`
