@@ -72,8 +72,9 @@ https://github.com/user-attachments/assets/eb4d1866-7708-435c-98f6-12c72ba09319
 ## Méthode de développement
 
 Ce projet a été implémenté avec Claude.ai (Anthropic) comme outil de génération de code.
-Mon rôle : identifier le problème, décrire précisément les fonctionnalités et l'UI souhaitées, tester le résultat, repérer les bugs et les comportements inattendus, puis diriger les correctifs et ajustements par itérations successives.
+Mon rôle : identifier le problème, décrire précisément les fonctionnalités et l'UI souhaitées, tester le résultat, repérer les bugs et les comportements inattendus, puis diriger les correctifs et ajustements par itérations successives.  
 
+Le fichier Agents.md est inspiré de [211abhi](https://github.com/211abhi/Project0/blob/main/Agents.md)  
 ---
 
 ## A faire
