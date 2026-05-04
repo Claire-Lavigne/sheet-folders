@@ -38,8 +38,8 @@ function getFullState() {
   return {
     data: getData(),
     sheets: ss.getSheets().map(s => ({
-      name: s.getName(),
-      index: s.getIndex(),
+      name:   s.getName(),
+      index:  s.getIndex(),
       hidden: s.isSheetHidden()
     }))
   };
@@ -47,7 +47,7 @@ function getFullState() {
 
 function createFolder(name, color) {
   const data = getData();
-  const id = 'f_' + Date.now();
+  const id   = 'f_' + Date.now();
   data.folders[id] = { name, color: color || '' };
   saveData(data);
   return id;
@@ -55,7 +55,9 @@ function createFolder(name, color) {
 
 function renameFolder(folderId, newName) {
   const data = getData();
-  if (data.folders[folderId]) { data.folders[folderId].name = newName; saveData(data); }
+  if (!data.folders[folderId]) return;
+  data.folders[folderId].name = newName;
+  saveData(data);
 }
 
 function updateFolderColor(folderId, color) {
@@ -66,23 +68,24 @@ function updateFolderColor(folderId, color) {
 
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   for (const sheetName in data.assignments) {
-    if (data.assignments[sheetName] === folderId) {
-      const sheet = ss.getSheetByName(sheetName);
-      if (sheet) sheet.setTabColor(color || null);
-    }
+    if (data.assignments[sheetName] !== folderId) continue;
+    const sheet = ss.getSheetByName(sheetName);
+    if (sheet) sheet.setTabColor(color || null);
   }
 }
 
 // Supprime le dossier et dissocie les feuilles (les feuilles sont conservées)
 function deleteFolder(folderId) {
   const data = getData();
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const ss   = SpreadsheetApp.getActiveSpreadsheet();
   for (const sheetName in data.assignments) {
-    if (data.assignments[sheetName] === folderId) {
-      const sheet = ss.getSheetByName(sheetName);
-      if (sheet) { sheet.setTabColor(null); sheet.showSheet(); }
-      delete data.assignments[sheetName];
+    if (data.assignments[sheetName] !== folderId) continue;
+    const sheet = ss.getSheetByName(sheetName);
+    if (sheet) {
+      sheet.setTabColor(null);
+      sheet.showSheet();
     }
+    delete data.assignments[sheetName];
   }
   delete data.folders[folderId];
   saveData(data);
@@ -91,22 +94,21 @@ function deleteFolder(folderId) {
 // Supprime le dossier ET toutes les feuilles associées
 function deleteFolderAndSheets(folderId) {
   const data = getData();
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const ss   = SpreadsheetApp.getActiveSpreadsheet();
   const sheetsToDelete = [];
 
   for (const sheetName in data.assignments) {
-    if (data.assignments[sheetName] === folderId) {
-      sheetsToDelete.push(sheetName);
-      delete data.assignments[sheetName];
-    }
+    if (data.assignments[sheetName] === folderId) sheetsToDelete.push(sheetName);
   }
-  delete data.folders[folderId];
-  saveData(data);
 
-  // Vérifier qu'il restera au moins une feuille après suppression
+  // Vérifier qu'il restera au moins une feuille après suppression — AVANT toute modification
   const allSheets = ss.getSheets();
   const remaining = allSheets.filter(s => !sheetsToDelete.includes(s.getName()));
-  if (remaining.length === 0) return false; // sécurité : on ne supprime pas tout
+  if (remaining.length === 0) return false;
+
+  sheetsToDelete.forEach(name => delete data.assignments[name]);
+  delete data.folders[folderId];
+  saveData(data);
 
   // Activer une feuille qui survivra avant de supprimer
   ss.setActiveSheet(remaining[0]);
@@ -127,42 +129,40 @@ function assignSheet(sheetName, folderId) {
   saveData(data);
 
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(sheetName);
-  if (sheet) {
-    const color = folderId && data.folders[folderId] ? data.folders[folderId].color : null;
-    sheet.setTabColor(color || null);
-  }
+  if (!sheet) return;
+  const color = folderId && data.folders[folderId] ? data.folders[folderId].color : null;
+  sheet.setTabColor(color || null);
 }
 
 function goToSheet(sheetName) {
-  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(sheetName);
-  if (sheet) SpreadsheetApp.getActiveSpreadsheet().setActiveSheet(sheet);
+  const ss    = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getSheetByName(sheetName);
+  if (sheet) ss.setActiveSheet(sheet);
 }
 
 // Basculer visibilité d'un dossier (sans toucher aux autres dossiers)
 function toggleFolderVisibility(folderId, makeVisible) {
-  const data = getData();
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const data      = getData();
+  const ss        = SpreadsheetApp.getActiveSpreadsheet();
   const allSheets = ss.getSheets();
 
   const folderSheets = allSheets.filter(s => data.assignments[s.getName()] === folderId);
-  if (folderSheets.length === 0) return;
+  if (folderSheets.length === 0) return false;
 
   if (makeVisible) {
     folderSheets.forEach(s => s.showSheet());
-  } else {
-    // Pour masquer : s'assurer qu'il reste au moins une feuille visible ailleurs
-    const visibleElsewhere = allSheets.filter(s =>
-      data.assignments[s.getName()] !== folderId && !s.isSheetHidden()
-    );
-    if (visibleElsewhere.length === 0) {
-      // Aucune feuille visible hors dossier → activer la 1ère du dossier avant de masquer les autres
-      // (cas limite : on ne peut pas tout masquer)
-      return false;
-    }
-    // Activer une feuille hors du dossier pour libérer la feuille active
-    ss.setActiveSheet(visibleElsewhere[0]);
-    folderSheets.forEach(s => { try { s.hideSheet(); } catch(e) {} });
+    return true;
   }
+
+  // Pour masquer : s'assurer qu'il reste au moins une feuille visible ailleurs
+  const visibleElsewhere = allSheets.filter(s =>
+    data.assignments[s.getName()] !== folderId && !s.isSheetHidden()
+  );
+  if (visibleElsewhere.length === 0) return false;
+
+  // Activer une feuille hors du dossier pour libérer la feuille active
+  ss.setActiveSheet(visibleElsewhere[0]);
+  folderSheets.forEach(s => { try { s.hideSheet(); } catch(e) {} });
   return true;
 }
 
@@ -177,13 +177,11 @@ function showSheetByName(sheetName) {
 }
 
 function hideSheetByName(sheetName) {
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const ss    = SpreadsheetApp.getActiveSpreadsheet();
   const sheet = ss.getSheetByName(sheetName);
   if (!sheet) return;
-  // S'assurer qu'il reste au moins une feuille visible
   const visibleOthers = ss.getSheets().filter(s => s.getName() !== sheetName && !s.isSheetHidden());
   if (visibleOthers.length === 0) return;
-  // Si la feuille à masquer est active, en activer une autre d'abord
   if (ss.getActiveSheet().getName() === sheetName) ss.setActiveSheet(visibleOthers[0]);
   sheet.hideSheet();
 }
