@@ -27,6 +27,14 @@ function saveData(data) {
   PropertiesService.getDocumentProperties().setProperty(STORAGE_KEY, JSON.stringify(data));
 }
 
+// Lit, applique fn(data), sauvegarde — retourne data
+function modifyData(fn) {
+  const data = getData();
+  fn(data);
+  saveData(data);
+  return data;
+}
+
 function getSheets() {
   return SpreadsheetApp.getActiveSpreadsheet()
     .getSheets()
@@ -34,104 +42,68 @@ function getSheets() {
 }
 
 function getFullState() {
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
-  return {
-    data: getData(),
-    sheets: ss.getSheets().map(s => ({
-      name:   s.getName(),
-      index:  s.getIndex(),
-      hidden: s.isSheetHidden()
-    }))
-  };
+  return { data: getData(), sheets: getSheets() };
 }
 
 function createFolder(name, color) {
-  const data = getData();
-  const id   = 'f_' + Date.now();
-  data.folders[id] = { name, color: color || '' };
-  saveData(data);
+  const id = 'f_' + Date.now();
+  modifyData(d => { d.folders[id] = { name, color: color || '' }; });
   return id;
 }
 
 function renameFolder(folderId, newName) {
-  const data = getData();
-  if (!data.folders[folderId]) return;
-  data.folders[folderId].name = newName;
-  saveData(data);
+  modifyData(d => { if (d.folders[folderId]) d.folders[folderId].name = newName; });
 }
 
 function updateFolderColor(folderId, color) {
-  const data = getData();
+  const data = modifyData(d => { if (d.folders[folderId]) d.folders[folderId].color = color; });
   if (!data.folders[folderId]) return;
-  data.folders[folderId].color = color;
-  saveData(data);
-
   const ss = SpreadsheetApp.getActiveSpreadsheet();
-  for (const sheetName in data.assignments) {
-    if (data.assignments[sheetName] !== folderId) continue;
-    const sheet = ss.getSheetByName(sheetName);
+  for (const name in data.assignments) {
+    if (data.assignments[name] !== folderId) continue;
+    const sheet = ss.getSheetByName(name);
     if (sheet) sheet.setTabColor(color || null);
   }
 }
 
-// Supprime le dossier et dissocie les feuilles (les feuilles sont conservées)
+// Supprime le dossier et dissocie les feuilles (conservées)
 function deleteFolder(folderId) {
-  const data = getData();
-  const ss   = SpreadsheetApp.getActiveSpreadsheet();
-  for (const sheetName in data.assignments) {
-    if (data.assignments[sheetName] !== folderId) continue;
-    const sheet = ss.getSheetByName(sheetName);
-    if (sheet) {
-      sheet.setTabColor(null);
-      sheet.showSheet();
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  modifyData(d => {
+    for (const name in d.assignments) {
+      if (d.assignments[name] !== folderId) continue;
+      const sheet = ss.getSheetByName(name);
+      if (sheet) { sheet.setTabColor(null); sheet.showSheet(); }
+      delete d.assignments[name];
     }
-    delete data.assignments[sheetName];
-  }
-  delete data.folders[folderId];
-  saveData(data);
+    delete d.folders[folderId];
+  });
 }
 
 // Supprime le dossier ET toutes les feuilles associées
 function deleteFolderAndSheets(folderId) {
-  const data = getData();
-  const ss   = SpreadsheetApp.getActiveSpreadsheet();
-  const sheetsToDelete = [];
+  const data      = getData();
+  const ss        = SpreadsheetApp.getActiveSpreadsheet();
+  const toDelete  = Object.keys(data.assignments).filter(n => data.assignments[n] === folderId);
+  const remaining = ss.getSheets().filter(s => !toDelete.includes(s.getName()));
+  if (!remaining.length) return false;
 
-  for (const sheetName in data.assignments) {
-    if (data.assignments[sheetName] === folderId) sheetsToDelete.push(sheetName);
-  }
-
-  // Vérifier qu'il restera au moins une feuille après suppression — AVANT toute modification
-  const allSheets = ss.getSheets();
-  const remaining = allSheets.filter(s => !sheetsToDelete.includes(s.getName()));
-  if (remaining.length === 0) return false;
-
-  sheetsToDelete.forEach(name => delete data.assignments[name]);
+  toDelete.forEach(n => delete data.assignments[n]);
   delete data.folders[folderId];
   saveData(data);
 
-  // Activer une feuille qui survivra avant de supprimer
   ss.setActiveSheet(remaining[0]);
-  sheetsToDelete.forEach(name => {
-    const sheet = ss.getSheetByName(name);
-    if (sheet) ss.deleteSheet(sheet);
-  });
+  toDelete.forEach(n => { const s = ss.getSheetByName(n); if (s) ss.deleteSheet(s); });
   return true;
 }
 
 function assignSheet(sheetName, folderId) {
-  const data = getData();
-  if (!folderId) {
-    delete data.assignments[sheetName];
-  } else {
-    data.assignments[sheetName] = folderId;
-  }
-  saveData(data);
-
+  const data = modifyData(d => {
+    if (!folderId) delete d.assignments[sheetName];
+    else d.assignments[sheetName] = folderId;
+  });
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(sheetName);
-  if (!sheet) return;
-  const color = folderId && data.folders[folderId] ? data.folders[folderId].color : null;
-  sheet.setTabColor(color || null);
+  if (sheet) sheet.setTabColor((folderId && data.folders[folderId]?.color) || null);
 }
 
 function goToSheet(sheetName) {
@@ -145,22 +117,16 @@ function toggleFolderVisibility(folderId, makeVisible) {
   const data      = getData();
   const ss        = SpreadsheetApp.getActiveSpreadsheet();
   const allSheets = ss.getSheets();
-
   const folderSheets = allSheets.filter(s => data.assignments[s.getName()] === folderId);
-  if (folderSheets.length === 0) return false;
+  if (!folderSheets.length) return false;
 
-  if (makeVisible) {
-    folderSheets.forEach(s => s.showSheet());
-    return true;
-  }
+  if (makeVisible) { folderSheets.forEach(s => s.showSheet()); return true; }
 
-  // Pour masquer : s'assurer qu'il reste au moins une feuille visible ailleurs
   const visibleElsewhere = allSheets.filter(s =>
     data.assignments[s.getName()] !== folderId && !s.isSheetHidden()
   );
-  if (visibleElsewhere.length === 0) return false;
+  if (!visibleElsewhere.length) return false;
 
-  // Activer une feuille hors du dossier pour libérer la feuille active
   ss.setActiveSheet(visibleElsewhere[0]);
   folderSheets.forEach(s => { try { s.hideSheet(); } catch(e) {} });
   return true;
@@ -170,18 +136,14 @@ function showAllSheets() {
   SpreadsheetApp.getActiveSpreadsheet().getSheets().forEach(s => s.showSheet());
 }
 
-// Visibilité individuelle par feuille
-function showSheetByName(sheetName) {
-  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(sheetName);
-  if (sheet) sheet.showSheet();
-}
-
-function hideSheetByName(sheetName) {
+// Visibilité individuelle — remplace showSheetByName / hideSheetByName
+function setSheetVisible(name, show) {
   const ss    = SpreadsheetApp.getActiveSpreadsheet();
-  const sheet = ss.getSheetByName(sheetName);
+  const sheet = ss.getSheetByName(name);
   if (!sheet) return;
-  const visibleOthers = ss.getSheets().filter(s => s.getName() !== sheetName && !s.isSheetHidden());
-  if (visibleOthers.length === 0) return;
-  if (ss.getActiveSheet().getName() === sheetName) ss.setActiveSheet(visibleOthers[0]);
+  if (show) { sheet.showSheet(); return; }
+  const others = ss.getSheets().filter(s => s.getName() !== name && !s.isSheetHidden());
+  if (!others.length) return;
+  if (ss.getActiveSheet().getName() === name) ss.setActiveSheet(others[0]);
   sheet.hideSheet();
 }
