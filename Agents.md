@@ -21,5 +21,3 @@ Follow these rules when you write code:
 - Use descriptive variable and function/const names. Also, event functions should be named with a “handle” prefix, like “handleClick” for onClick and “handleKeyDown” for onKeyDown.
 - Implement accessibility features on elements.
 - Use consts instead of functions.
-
-> [Inspiré de 211abhi](https://github.com/211abhi/Project0/blob/main/Agents.md)
