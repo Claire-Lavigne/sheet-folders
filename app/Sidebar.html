@@ -30,14 +30,14 @@ body {
   background: var(--bg);
   color: var(--text);
   font-size: 13px;
-  padding: 0;
+  padding: 0 5px 10px;
   min-height: 100vh;
   overflow-x: hidden;
 }
 
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+::-webkit-scrollbar-thumb { background: var(--border); }
 
 /* ── TABS ── */
 .tabs {
@@ -165,6 +165,7 @@ body {
   width: 16px; height: 16px; flex-shrink: 0;
   color: var(--text3); transition: transform .2s ease;
   display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
 }
 .folder-chevron.open { transform: rotate(90deg); }
 
@@ -420,15 +421,18 @@ let hiddenSheets  = new Set();
 
 const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
+// Éléments toast cachés — évite 3 querySelector à chaque action
+const $toast    = document.getElementById('toast');
+const $toastDot = document.getElementById('toast-dot');
+const $toastMsg = document.getElementById('toast-msg');
+
 const showToast = (msg, type) => {
-  const t   = document.getElementById('toast');
-  const dot = document.getElementById('toast-dot');
-  document.getElementById('toast-msg').textContent = msg;
-  dot.style.background = type === 'err' ? '#d93025' : type === 'warn' ? '#e37400' : '#188038';
-  t.classList.remove('hidden');
-  t.style.animation = 'none'; void t.offsetWidth; t.style.animation = 'toastIn .2s ease';
-  clearTimeout(t._timer);
-  t._timer = setTimeout(() => t.classList.add('hidden'), 2400);
+  $toastMsg.textContent = msg;
+  $toastDot.style.background = type === 'err' ? '#d93025' : type === 'warn' ? '#e37400' : '#188038';
+  $toast.classList.remove('hidden');
+  $toast.style.animation = 'none'; void $toast.offsetWidth; $toast.style.animation = 'toastIn .2s ease';
+  clearTimeout($toast._timer);
+  $toast._timer = setTimeout(() => $toast.classList.add('hidden'), 2400);
 };
 
 
@@ -463,6 +467,12 @@ const syncHiddenFromServer = () => {
   hiddenFolders.clear();
   state.sheets.forEach(s => s.hidden && hiddenSheets.add(s.name));
   for (const id in state.data.folders) syncFolderHidden(id);
+};
+
+// Dissocie toutes les feuilles d'un dossier dans l'état local
+const clearFolderAssignments = id => {
+  for (const s in state.data.assignments)
+    if (state.data.assignments[s] === id) delete state.data.assignments[s];
 };
 
 
@@ -535,7 +545,7 @@ const tplFolderCard = (id, f) => {
   const sheetsHtml = sheets.length
     ? sheets.map(tplSheet).join('')
     : '<div class="sheet-pill-empty">Aucune feuille assignée</div>';
-  const isWhite  = f.color?.toLowerCase().replace(/\s/g, '') === '#ffffff';
+  const isWhite   = f.color?.toLowerCase() === '#ffffff';
   const cardStyle = f.color
     ? `--folder-color:${f.color};${isWhite ? '--folder-color-shadow:inset -1px 0 0 rgba(0,0,0,.2)' : ''}`
     : '';
@@ -546,7 +556,6 @@ const tplFolderCard = (id, f) => {
     <div class="folder-header">
       <button class="folder-toggle" type="button" aria-expanded="${isOpen}" onclick="toggleFolder('${id}')">
         <span class="folder-name" id="fname-${id}">${esc(f.name)}</span>
-        <span class="folder-chevron ${isOpen ? 'open' : ''}" aria-hidden="true">${ICON_CHEVRON}</span>
       </button>
       <span class="folder-meta">
         <span class="folder-count" aria-label="${sheets.length} feuille${sheets.length !== 1 ? 's' : ''}">${sheets.length}</span>
@@ -556,6 +565,7 @@ const tplFolderCard = (id, f) => {
           ${isHidden ? 'Afficher' : 'Masquer'}
         </button>
       </span>
+      <span class="folder-chevron ${isOpen ? 'open' : ''}" aria-hidden="true" onclick="toggleFolder('${id}')">${ICON_CHEVRON}</span>
     </div>
     <div class="folder-body ${isOpen ? 'open' : ''}">
       <div class="folder-body-inner">
@@ -568,9 +578,9 @@ const tplFolderCard = (id, f) => {
 
 const tplAssignRow = s => {
   const { folders, assignments } = state.data;
-  const n          = esc(s.name);
-  const assigned   = assignments[s.name];
-  const hasFolder  = assigned && folders[assigned];
+  const n           = esc(s.name);
+  const assigned    = assignments[s.name];
+  const hasFolder   = assigned && folders[assigned];
   const folderColor = hasFolder ? folders[assigned].color : null;
   const dotHtml = !hasFolder
     ? '<span style="width:8px;height:8px;flex-shrink:0;display:inline-block" aria-hidden="true"></span>'
@@ -595,10 +605,9 @@ const tplAssignRow = s => {
 // ═══════════════════════════════════════════
 
 const renderFolders = () => {
-  const list    = document.getElementById('folder-list');
-  const folders = state.data.folders;
-  list.innerHTML = Object.keys(folders).length
-    ? Object.entries(folders).map(([id, f]) => tplFolderCard(id, f)).join('')
+  const entries = Object.entries(state.data.folders);
+  document.getElementById('folder-list').innerHTML = entries.length
+    ? entries.map(([id, f]) => tplFolderCard(id, f)).join('')
     : tplEmpty();
 };
 
@@ -614,9 +623,15 @@ const render = () => {
   else renderAssign();
 };
 
+// Mise à jour DOM directe — évite render() complet pour la simple ouverture/fermeture
 function toggleFolder(id) {
   openFolders.has(id) ? openFolders.delete(id) : openFolders.add(id);
-  render();
+  const isOpen = openFolders.has(id);
+  const card   = document.querySelector(`[data-folder-id="${id}"]`);
+  if (!card) return render();
+  card.querySelector('.folder-body').classList.toggle('open', isOpen);
+  card.querySelector('.folder-chevron').classList.toggle('open', isOpen);
+  card.querySelector('.folder-toggle').setAttribute('aria-expanded', isOpen);
 }
 
 
@@ -634,13 +649,15 @@ function switchTab(tab) {
     btn.classList.toggle('active', t === tab);
     btn.setAttribute('aria-selected', t === tab);
   });
-  if (!isFolders) {
+  // Render cache immédiat — pas de flash loader si données déjà chargées
+  if (!isFolders && !state.sheets.length)
     document.getElementById('assign-list').innerHTML = '<div class="loader"></div>';
-    google.script.run
-      .withSuccessHandler(sheets => { state.sheets = sheets; render(); })
-      .withFailureHandler(() => render())
-      .getSheets();
-  } else render();
+  else render();
+  // Refresh silencieux à chaque switch — capte les feuilles ajoutées/supprimées côté Sheets
+  google.script.run
+    .withSuccessHandler(sheets => { state.sheets = sheets; render(); })
+    .withFailureHandler(() => {})
+    .getSheets();
 }
 
 
@@ -826,8 +843,7 @@ function confirmDissociate(id, toastMsg) {
   const msg = toastMsg || 'Dossier supprimé, feuilles conservées';
   optimistic(() => {
     delete state.data.folders[id];
-    for (const s in state.data.assignments)
-      if (state.data.assignments[s] === id) delete state.data.assignments[s];
+    clearFolderAssignments(id);
     hiddenFolders.delete(id);
     showToast(msg);
   }, 'deleteFolder', id);
@@ -867,8 +883,7 @@ function confirmDeleteAll(id) {
     () => optimistic(() => {
       state.sheets = remaining;
       delete state.data.folders[id];
-      for (const s in state.data.assignments)
-        if (state.data.assignments[s] === id) delete state.data.assignments[s];
+      clearFolderAssignments(id);
       hiddenFolders.delete(id);
       names.forEach(n => hiddenSheets.delete(n));
       showToast('Dossier et feuilles supprimés');
