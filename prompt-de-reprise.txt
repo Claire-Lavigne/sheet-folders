@@ -3,11 +3,11 @@ Projet : Sheet Folders — extension Google Sheets (Apps Script + HTML/CSS/JS va
 Repo : github.com/Claire-Lavigne/sheet-folders. 
 
 Fichiers actuels (à uploader): 
-- app/Sidebar.html
-- app/[Code.gs](http://Code.gs) — serveur Apps Script 
-- docs/index.html + docs/styles.css — page GitHub Pages 
-- docs/CASE_[STUDY.md](http://STUDY.md) — tableaux problèmes/solutions 
-- docs/[README.md](http://README.md) 
-- [CLAUDE.md](http://CLAUDE.md) + [Agents.md](http://Agents.md) — architecture, conventions, règles (à lire en premier) 
+- `app/Code.gs` — serveur Apps Script (189 lignes)
+- `app/Sidebar.html` — sidebar complète HTML/CSS/JS (983 lignes)
+- `docs/index.html` + `docs/styles.css` — page GitHub Pages
+- `docs/CASE_STUDY.md` — notes de projet
+- `docs/README.md` — intro au projet
+- `CLAUDE.md` + `Agents.md` — architecture, conventions, règles (à lire en premier) 
 
 Tâche de cette session : 
