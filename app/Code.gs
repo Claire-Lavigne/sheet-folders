@@ -18,20 +18,13 @@ function openSidebar() {
   SpreadsheetApp.getUi().showSidebar(html);
 }
 
-function getData() {
-  const raw = PropertiesService.getDocumentProperties().getProperty(STORAGE_KEY);
-  return raw ? JSON.parse(raw) : { folders: {}, assignments: {} };
-}
-
-function saveData(data) {
-  PropertiesService.getDocumentProperties().setProperty(STORAGE_KEY, JSON.stringify(data));
-}
-
-// Lit, applique fn(data), sauvegarde — retourne data
+// Un seul appel getDocumentProperties() au lieu de deux (getData + saveData)
 function modifyData(fn) {
-  const data = getData();
+  const props = PropertiesService.getDocumentProperties();
+  const raw   = props.getProperty(STORAGE_KEY);
+  const data  = raw ? JSON.parse(raw) : { folders: {}, assignments: {} };
   fn(data);
-  saveData(data);
+  props.setProperty(STORAGE_KEY, JSON.stringify(data));
   return data;
 }
 
@@ -42,7 +35,11 @@ function getSheets() {
 }
 
 function getFullState() {
-  return { data: getData(), sheets: getSheets() };
+  const raw = PropertiesService.getDocumentProperties().getProperty(STORAGE_KEY);
+  return {
+    data:   raw ? JSON.parse(raw) : { folders: {}, assignments: {} },
+    sheets: getSheets()
+  };
 }
 
 function createFolder(name, color) {
@@ -59,20 +56,22 @@ function updateFolderColor(folderId, color) {
   const data = modifyData(d => { if (d.folders[folderId]) d.folders[folderId].color = color; });
   if (!data.folders[folderId]) return;
   const ss = SpreadsheetApp.getActiveSpreadsheet();
+  // sheetMap évite O(n×m) getSheetByName en boucle → O(1) par lookup
+  const sheetMap = Object.fromEntries(ss.getSheets().map(s => [s.getName(), s]));
   for (const name in data.assignments) {
     if (data.assignments[name] !== folderId) continue;
-    const sheet = ss.getSheetByName(name);
-    if (sheet) sheet.setTabColor(color || null);
+    sheetMap[name]?.setTabColor(color || null);
   }
 }
 
 // Supprime le dossier et dissocie les feuilles (conservées)
 function deleteFolder(folderId) {
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const ss       = SpreadsheetApp.getActiveSpreadsheet();
+  const sheetMap = Object.fromEntries(ss.getSheets().map(s => [s.getName(), s]));
   modifyData(d => {
     for (const name in d.assignments) {
       if (d.assignments[name] !== folderId) continue;
-      const sheet = ss.getSheetByName(name);
+      const sheet = sheetMap[name];
       if (sheet) { sheet.setTabColor(null); sheet.showSheet(); }
       delete d.assignments[name];
     }
@@ -82,18 +81,22 @@ function deleteFolder(folderId) {
 
 // Supprime le dossier ET toutes les feuilles associées
 function deleteFolderAndSheets(folderId) {
-  const data      = getData();
+  const props     = PropertiesService.getDocumentProperties();
+  const raw       = props.getProperty(STORAGE_KEY);
+  const data      = raw ? JSON.parse(raw) : { folders: {}, assignments: {} };
   const ss        = SpreadsheetApp.getActiveSpreadsheet();
+  const allSheets = ss.getSheets();
+  const sheetMap  = Object.fromEntries(allSheets.map(s => [s.getName(), s]));
   const toDelete  = Object.keys(data.assignments).filter(n => data.assignments[n] === folderId);
-  const remaining = ss.getSheets().filter(s => !toDelete.includes(s.getName()));
+  const remaining = allSheets.filter(s => !toDelete.includes(s.getName()));
   if (!remaining.length) return false;
 
   toDelete.forEach(n => delete data.assignments[n]);
   delete data.folders[folderId];
-  saveData(data);
+  props.setProperty(STORAGE_KEY, JSON.stringify(data));
 
   ss.setActiveSheet(remaining[0]);
-  toDelete.forEach(n => { const s = ss.getSheetByName(n); if (s) ss.deleteSheet(s); });
+  toDelete.forEach(n => { if (sheetMap[n]) ss.deleteSheet(sheetMap[n]); });
   return true;
 }
 
@@ -114,16 +117,17 @@ function goToSheet(sheetName) {
 
 // Basculer visibilité d'un dossier (sans toucher aux autres dossiers)
 function toggleFolderVisibility(folderId, makeVisible) {
-  const data      = getData();
+  const raw       = PropertiesService.getDocumentProperties().getProperty(STORAGE_KEY);
+  const parsed    = raw ? JSON.parse(raw) : { folders: {}, assignments: {} };
   const ss        = SpreadsheetApp.getActiveSpreadsheet();
   const allSheets = ss.getSheets();
-  const folderSheets = allSheets.filter(s => data.assignments[s.getName()] === folderId);
+  const folderSheets = allSheets.filter(s => parsed.assignments[s.getName()] === folderId);
   if (!folderSheets.length) return false;
 
   if (makeVisible) { folderSheets.forEach(s => s.showSheet()); return true; }
 
   const visibleElsewhere = allSheets.filter(s =>
-    data.assignments[s.getName()] !== folderId && !s.isSheetHidden()
+    parsed.assignments[s.getName()] !== folderId && !s.isSheetHidden()
   );
   if (!visibleElsewhere.length) return false;
 
