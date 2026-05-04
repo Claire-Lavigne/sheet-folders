@@ -6,14 +6,6 @@ Google Sheets ne propose aucun outil pour organiser les feuilles. Sur 20+ onglet
 
 ![Sheet Folders preview](/docs/demo.mp4)
 
-## Problème de départ
-
-Google Sheets ne propose pas de système de dossiers. Sur un fichier avec 20+ feuilles, retrouver ce qu'on cherche devient vite pénible. 
-
-## Objectif
-
-Sheet Folders, organise tes onglets Google Sheets en dossiers, avec navigation, couleurs et contrôle de visibilité  — directement dans une sidebar.  
-
 ---
 
 ## Fonctionnalités
