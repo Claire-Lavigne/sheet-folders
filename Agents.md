@@ -22,3 +22,4 @@ Follow these rules when you write code:
 - Implement accessibility features on elements by prioritizing native HTML elements.
 - Use consts instead of functions.
 - UX/UI modern and intuitive.
+- Optimize the code by reducing its length and improving performance, without changing functionality.
