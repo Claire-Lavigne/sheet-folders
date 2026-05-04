@@ -11,4 +11,3 @@ Fichiers actuels (à uploader):
 - `CLAUDE.md` + `Agents.md` + `SKILL.md` — architecture, conventions, règles (à lire en premier) 
 
 Tâche de cette session : 
-Réduire la quantité de code tout en améliorant les performances et vitesse d'exécution, sans modifier les fonctionnalités existantes.
