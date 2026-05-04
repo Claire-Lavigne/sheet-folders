@@ -78,3 +78,4 @@ Mon rôle : identifier le problème, décrire précisément les fonctionnalités
 - mettre à jour vidéo demo
 
 Le fichier Agents.md est inspiré de [211abhi](https://github.com/211abhi/Project0/blob/main/Agents.md)
+Le fichier SKILL.md provient de [anthropics](https://github.com/anthropics/skills/blob/main/skills/frontend-design/SKILL.md)
