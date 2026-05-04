@@ -39,15 +39,6 @@ optimistic(localUpdate, serverFn, ...args)
 ## Conventions Code.gs
 
 - `getData()` / `saveData(data)` — seuls points d'accès à `PropertiesService`
-- `setTabColor(color || null)` — systématiquement, jamais `setTabColor(color)`
-- `createFolder` stocke `color: ''` si pas de couleur — pas de fallback coloré
-
-## Règles critiques — ne jamais enfreindre
-
-- **Un seul `<script>` tag** dans Sidebar.html — deux tags = double `init()` = doublons à la création
-- **Vérification côté client** avant tout masquage — Google Sheets exige au moins une feuille visible
-- **`dataset.color`** pour lire/écrire la couleur du swatch — `style.background` est interdit
-- **`onfocus` interdit** sur `<input type="color">` — ferme le panel trop tôt
 
 ## Auteur
 
