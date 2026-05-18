@@ -17,7 +17,7 @@ https://github.com/user-attachments/assets/1536ca11-edca-4108-988e-fc8b59a317a1
 
 ## Installation
 
-> ⭐ Si cet outil t'est utile, une étoile sur le repo est la meilleure façon de me le faire savoir.
+> ⭐ Merci de mettre une étoile à ce repo
 
 ### 1. Ouvre l'éditeur Apps Script
 
