@@ -8,8 +8,7 @@ Sheet Folders ajoute un système de dossiers directement dans une sidebar native
 ## Méthode
 
 Implémenté avec Claude.ai.  
-Mon rôle : spécifier, tester, repérer les bugs, diriger les correctifs.
-  
+Mon rôle : spécifier les fonctionnalités et l'UX/UI, tester, repérer les bugs et comportements inattendus, diriger les correctifs.
   
 ## Fonctionnalités
 
