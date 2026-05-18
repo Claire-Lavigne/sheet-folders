@@ -3,26 +3,46 @@
 ## Contexte
 
 Google Sheets n'offre aucun outil pour organiser les onglets. Sur 20+ feuilles, retrouver ce qu'on cherche devient pénible.  
-Sheet Folders ajoute un système de dossiers directement dans une sidebar native.
+Sheet Folders ajoute un système de dossiers directement dans une sidebar native, avec une interface moderne et intuitive.
 
 ## Méthode
 
-Implémenté avec Claude.ai. Mon rôle : spécifier, tester, repérer les bugs, diriger les correctifs. Je n'ai pas écrit le code.
-
----
-
+Implémenté avec Claude.ai.  
+Mon rôle : spécifier, tester, repérer les bugs, diriger les correctifs.
+  
+  
 ## Fonctionnalités
 
-| | |
-|---|---|
-| Dossiers | Créer avec nom et couleur — synchronisée automatiquement sur les onglets |
-| Assignation | Associer des feuilles à un dossier |
-| Navigation | Aller sur une feuille directement depuis la sidebar |
-| Visibilité | Masquer / afficher un dossier entier ou feuille par feuille |
-| Gestion | Renommer, supprimer — avec choix de dissocier les feuilles ou supprimer tout le dossier |
-
----
-
+<table>
+    <tbody>
+        <tr>
+            <td>Dossiers</td>
+            <td>Créer avec nom et couleur — synchronisée automatiquement sur les onglets</td>
+        </tr>
+        <tr>
+            <td>Assignation</td>
+            <td>Associer des feuilles à un dossier</td>
+        </tr>
+        <tr>
+            <td>Navigation</td>
+            <td>Aller sur une feuille directement depuis la sidebar</td>
+        </tr>
+        <tr>
+            <td>Visibilité</td>
+            <td>Masquer / afficher un dossier entier ou feuille par feuille</td>
+        </tr>
+        <tr>
+            <td>Gestion</td>
+            <td>Renommer, supprimer — avec choix de dissocier les feuilles ou supprimer tout le dossier</td>
+        </tr>
+        <tr>
+            <td>Accessibilité</td>
+            <td>Balises HTML natives — navigation clavier fonctionnelle</td>
+        </tr>
+    </tbody>
+</table>
+  
+  
 ## Contraintes API Google Sheets
 
 | Contrainte | Solution |
@@ -31,12 +51,4 @@ Implémenté avec Claude.ai. Mon rôle : spécifier, tester, repérer les bugs, 
 | Impossible de masquer la feuille active | Basculer sur une autre feuille avant de masquer |
 | Impossible de masquer toutes les feuilles | Vérification côté client avant tout appel serveur |
 | Latence par appel asynchrone `google.script.run` | Optimistic UI — mise à jour de l'état local, sync serveur en arrière-plan pour + de rapidité |
-
----
-
-## Décisions
-
-| | |
-|---|---|
-| Accessibilité | Balises HTML natives (`<button>`, `<select>`, `<input>`) — navigation clavier fonctionnelle |
-| UX | Contrôles contextuels visibles uniquement quand pertinents — retour immédiat via toast sans bloquer l'interface — Design moderne et intuitif |
+  
